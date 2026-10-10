@@ -1,5 +1,11 @@
 import { expect, test } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!localStorage.getItem("raid-signal-language")) localStorage.setItem("raid-signal-language", "en");
+  });
+});
+
 test("desktop preview supports keyboard map and accessible dialogs", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("application", { name: "Customs map" })).toBeVisible();

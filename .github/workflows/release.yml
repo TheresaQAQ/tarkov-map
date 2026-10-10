@@ -41,6 +41,27 @@ jobs:
           $cargo = Select-String -Path src-tauri/Cargo.toml -Pattern '^version = "([^\"]+)"' | ForEach-Object { $_.Matches[0].Groups[1].Value }
           if ($tag -ne $package -or $tag -ne $cargo) { throw "Tag, package, and Cargo versions must match" }
       - run: npm run tauri:build
+      - name: Verify clean Windows installation and startup
+        shell: pwsh
+        run: |
+          $candidates = @(Get-ChildItem src-tauri/target/release/bundle/nsis -Filter '*setup.exe')
+          if ($candidates.Count -ne 1) { throw "Expected exactly one NSIS installer" }
+          $installDirectory = Join-Path $env:RUNNER_TEMP 'raid-signal-install'
+          $installer = Start-Process -FilePath $candidates[0].FullName -ArgumentList @('/S', "/D=$installDirectory") -WindowStyle Hidden -PassThru
+          if (-not $installer.WaitForExit(120000)) { $installer.Kill(); throw "Installer timed out" }
+          if ($installer.ExitCode -ne 0) { throw "Installer exited with code $($installer.ExitCode)" }
+          $binary = Join-Path $installDirectory 'raid-signal.exe'
+          if (-not (Test-Path -LiteralPath $binary)) { throw "Installed application is missing" }
+          $application = Start-Process -FilePath $binary -WindowStyle Hidden -PassThru
+          try {
+            if (-not $application.WaitForInputIdle(30000)) { throw "Application did not initialize its Windows message loop" }
+            Start-Sleep -Seconds 5
+            $application.Refresh()
+            if ($application.HasExited) { throw "Application exited during startup with code $($application.ExitCode)" }
+            Write-Output 'Installed application started successfully on the clean Windows runner'
+          } finally {
+            if (-not $application.HasExited) { Stop-Process -Id $application.Id -Force }
+          }
       - name: Stage and scan installer
         id: artifact
         shell: pwsh
@@ -60,7 +81,7 @@ jobs:
           $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $target).Hash.ToLowerInvariant()
           $size = (Get-Item -LiteralPath $target).Length
           "$hash  Raid-Signal-Setup-$version.exe" | Set-Content -NoNewline "release/Raid-Signal-Setup-$version.exe.sha256"
-          $downloadUrl = "https://github.com/QTtrash/tarkov-map/releases/download/v$version/Raid-Signal-Setup-$version.exe"
+          $downloadUrl = "https://github.com/${{ github.repository }}/releases/download/v$version/Raid-Signal-Setup-$version.exe"
           @{ version=$version; filename="Raid-Signal-Setup-$version.exe"; downloadUrl=$downloadUrl; sha256=$hash; size=$size; publishedAt=(Get-Date).ToUniversalTime().ToString('o') } |
             ConvertTo-Json | Set-Content release/release.json
       - uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
@@ -114,4 +135,4 @@ jobs:
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${{ github.ref_name }}" release/* --verify-tag --generate-notes --notes-file .github/RELEASE_NOTES.md --title "Raid Signal ${{ github.ref_name }}"
+        run: gh release create "${{ github.ref_name }}" release/* --draft --verify-tag --notes-file .github/RELEASE_NOTES.md --title "Raid Signal ${{ github.ref_name }} 中文版"

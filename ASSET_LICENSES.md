@@ -23,6 +23,37 @@ observations do not replace the per-file checksum ledger.
 
 ## Redistribution boundary
 
+### Chinese game text (2026-10-10)
+
+`src/locales/tarkov-zh-CN.json` contains 6,276 source-keyed English/Chinese pairs
+matched to existing map, POI, quest, item, and trader text/identifiers. These are display
+translations only; existing IDs, objectives, coordinates, artwork, and English
+snapshots were not refreshed. Sources are the `_en` and `_zh` dictionaries at
+`https://json.tarkov.dev/{regular,pve,pvp-season}/tasks` and
+`https://json.tarkov.dev/regular/{maps,items,traders}`. Exact source URLs and the
+retrieval time and response SHA-256 values are embedded in the file. A secondary
+public game-locale mirror uses
+`https://raw.githubusercontent.com/carlsmei/tarkovdata/08649f48a43fe8f4bea311b23a224a278a26492b/languages/{en,ch}.json`,
+recorded as game version `1.0.2.0.43037`; this supplies missing legacy labels
+and unchanged English strings without claiming it is the latest client locale.
+Each pair retains its original locale key and source index. Credit Tarkov.dev contributors and
+the corresponding game localization authors; game-derived text retains its
+source terms and is not covered by the application's Apache-2.0 code license.
+
+The initial SHA-256 is
+`dab0c37240b79a006714422f1fba139eb531690c080695184bf39fb4d4c1d9c0`.
+`src/locales/tarkov-text-checksums.json` is the authoritative identity for subsequent
+language-only updates. Tests verify the identity, provenance validation,
+disambiguation, verbatim names, and English fallback. `scripts/sync-chinese-text.mjs` fetches bounded
+JSON from the two allowlisted source hosts and filters against retained text/IDs; it does
+not download images or replace the map/quest snapshots. Review the current
+Tarkov.dev API/data terms before redistributing refreshed dictionaries.
+
+Interface translations in `src/locales/zh-CN.ts` were authored for this
+localization. Authored substitutes for game names and objectives have been
+removed; application copy does not override sourced game text. See
+`docs/TARKOV_TERMINOLOGY.md` for source and fallback policy.
+
 ### Quest location previews and Wiki links (2026-09-24)
 
 Objective location previews crop and annotate the already bundled artwork at

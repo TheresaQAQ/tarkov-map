@@ -9,6 +9,16 @@ This application uses Tauri, React, Leaflet, and other open-source dependencies 
 
 Coordinate transforms and map metadata are based on the MIT-licensed [tarkov.dev](https://github.com/the-hideout/tarkov-dev) project. The bundled point-of-interest snapshot is generated from the public [Tarkov.dev API](https://tarkov.dev/api/).
 
+The bundled bilingual game-text dictionary retains Tarkov.dev's English
+and Chinese locale keys and original values, matched to existing snapshot text
+and identifiers. Legacy labels and unchanged English strings also use the
+public carlsmei/tarkovdata game-locale mirror at pinned revision
+`08649f48a43fe8f4bea311b23a224a278a26492b` (game `1.0.2.0.43037`). Credit
+Tarkov.dev contributors and the game's localization authors. This data retains
+its source terms; see the 2026-10-10 entry in `ASSET_LICENSES.md` for provenance
+and SHA-256 identity. Original interface translations are separately maintained
+as application source.
+
 Escape from Tarkov SVG maps are provided by [the-hideout/tarkov-dev-svg-maps](https://github.com/the-hideout/tarkov-dev-svg-maps) under CC BY-NC-SA 4.0. The map assets are separate works from the Apache-2.0 application code. Attribution is also shown inside the application. The upstream repository publishes additional usage guidance; redistributors must review and preserve applicable current restrictions.
 
 Icebreaker and Labyrinth map images are provided by [RE3MR](https://reemr.se/) under CC BY-NC-SA 4.0. Raid Signal self-hosts pinned copies downloaded on 2026-08-12 from the creator's published full-resolution map URLs. Derived deck/crop images are fitted to Tarkov.dev coordinate bounds for interactive display. RE3MR asks website and application users to contact the creator. No authorship or endorsement is implied.

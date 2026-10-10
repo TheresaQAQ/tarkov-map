@@ -4,6 +4,8 @@ Raid Signal is a Windows Tauri application plus a separately deployed Node.js
 relay and static phone companion. Treat this file as an index; follow the linked
 documents instead of duplicating their details in prompts or code comments.
 
+Original repository: [QTtrash/tarkov-map](https://github.com/QTtrash/tarkov-map).
+
 ## Start here
 
 - `docs/ARCHITECTURE.md` — runtime boundaries, data flow, and module ownership.

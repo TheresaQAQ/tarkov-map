@@ -1,7 +1,10 @@
+import { localizeMessage, t } from "../i18n";
+import { useLanguage } from "../use-language";
 import { useEffect, useRef, useState } from "react";
 import { isTauriRuntime, readLatestScreenshot, resetOverlayWindow } from "../locator";
 import type { MapSessionState } from "../map-session";
 import type { LocatorSettings, LocatorStatus, OverlayState, RaidExtractState } from "../types";
+import { LanguageSelect } from "./LanguageSelect";
 import { Dialog } from "./Dialog";
 import { UiIcon } from "./Icons";
 
@@ -36,6 +39,7 @@ export function SettingsDialog({
   onUpdateSettings,
   onOverlayAction,
 }: SettingsDialogProps) {
+  const language = useLanguage();
   const [rescanState, setRescanState] = useState<"idle" | "scanning" | "success" | "error">("idle");
   const [rescanMessage, setRescanMessage] = useState<string | null>(null);
   const rescanBaseline = useRef<LocatorStatus | null>(null);
@@ -62,66 +66,72 @@ export function SettingsDialog({
     <Dialog className="settings-dialog" titleId="settings-title" onClose={onClose}>
       <header>
         <div>
-          <span className="kicker">SYSTEM CONFIGURATION</span>
-          <h2 id="settings-title">Raid Signal settings</h2>
+          <span className="kicker">{t("SYSTEM CONFIGURATION")}</span>
+          <h2 id="settings-title">{t("Raid Signal settings")}</h2>
         </div>
-        <button className="bare-icon" onClick={onClose} aria-label="Close">
+        <button className="bare-icon" onClick={onClose} aria-label={t("Close")}>
           <UiIcon name="close" />
         </button>
       </header>
       <div className="dialog-section">
-        <h3>DATA SOURCES</h3>
-        <p>The locator reads files created by Tarkov. No game memory or network connection is used.</p>
+        <h3>{t("DATA SOURCES")}</h3>
+        <p>{t("The locator reads files created by Tarkov. No game memory or network connection is used.")}</p>
         <button className="folder-row" onClick={() => void onBrowse("screenshots")}>
           <UiIcon name="folder" />
           <span>
-            <b>SCREENSHOTS</b>
-            <small>{status.screenshotsDir ?? "Folder not detected"}</small>
+            <b>{t("SCREENSHOTS")}</b>
+            <small>{status.screenshotsDir ?? t("Folder not detected")}</small>
           </span>
-          <strong>BROWSE</strong>
+          <strong>{t("BROWSE")}</strong>
         </button>
         {status.screenshotsDir && (
           <button className="inline-action" onClick={() => void onOpenDirectory("screenshots")}>
-            OPEN SCREENSHOTS FOLDER
+            {t("OPEN SCREENSHOTS FOLDER")}
           </button>
         )}
         <button className="folder-row" onClick={() => void onBrowse("logs")}>
           <UiIcon name="folder" />
           <span>
-            <b>CONFIGURED LOGS ROOT</b>
-            <small>{settings.logsDir ?? "Automatic detection"}</small>
+            <b>{t("CONFIGURED LOGS ROOT")}</b>
+            <small>{settings.logsDir ?? t("Automatic detection")}</small>
           </span>
-          <strong>BROWSE</strong>
+          <strong>{t("BROWSE")}</strong>
         </button>
         {status.logsDir && (
           <div className="resolved-folder">
-            <span>ACTIVE SESSION</span>
+            <span>{t("ACTIVE SESSION")}</span>
             <code>{status.logsDir}</code>
           </div>
         )}
         {settings.logsDir && (
           <button className="inline-action" onClick={() => void onOpenDirectory("logs")}>
-            OPEN CONFIGURED LOGS ROOT
+            {t("OPEN CONFIGURED LOGS ROOT")}
           </button>
         )}
         <button className="dialog-button" onClick={() => void rescan()} disabled={rescanState === "scanning"}>
-          {rescanState === "scanning" ? "SCANNING FOLDERS…" : "RESCAN FOLDERS"}
+          {rescanState === "scanning" ? t("SCANNING FOLDERS…") : t("RESCAN FOLDERS")}
         </button>
-        {rescanMessage && <p className={`rescan-result ${rescanState}`}>{rescanMessage}</p>}
-        <p className="field-help">Folder rescan updates data-source detection. Quest records are scanned separately.</p>
+        {rescanMessage && <p className={`rescan-result ${rescanState}`}>{localizeMessage(rescanMessage)}</p>}
+        <p className="field-help">
+          {t("Folder rescan updates data-source detection. Quest records are scanned separately.")}
+        </p>
         <button className="dialog-button secondary" onClick={onReviewQuestLogs}>
-          REVIEW QUEST LOGS
+          {t("REVIEW QUEST LOGS")}
         </button>
         <button className="dialog-button secondary" onClick={() => void readLatestScreenshot()}>
-          READ LATEST SCREENSHOT
+          {t("READ LATEST SCREENSHOT")}
         </button>
       </div>
       <div className="dialog-section">
-        <h3>FILE HANDLING & DISPLAY</h3>
+        <h3>{t("FILE HANDLING & DISPLAY")}</h3>
+        <div className="switch-row">
+          <b>{t("Language")}</b>
+          <LanguageSelect />
+        </div>
         <label className="switch-row">
           <span>
-            <b>Delete parsed screenshots</b>
-            <small>Disabled by default. Invalid and older files are never removed.</small>
+            <b>{t("Delete parsed screenshots")}</b>
+            <small>{t("Disabled by default. Invalid and older files are never removed.")}</small>
           </span>
           <input
             type="checkbox"
@@ -131,8 +141,8 @@ export function SettingsDialog({
         </label>
         <label className="switch-row">
           <span>
-            <b>High contrast</b>
-            <small>Improves text and control contrast without changing map data.</small>
+            <b>{t("High contrast")}</b>
+            <small>{t("Improves text and control contrast without changing map data.")}</small>
           </span>
           <input
             type="checkbox"
@@ -142,8 +152,8 @@ export function SettingsDialog({
         </label>
         <label className="range-row">
           <span>
-            <b>Overlay opacity</b>
-            <small>Ctrl+Shift+M toggles the overlay; Ctrl+Shift+X restores clicks.</small>
+            <b>{t("Overlay opacity")}</b>
+            <small>{t("Ctrl+Shift+M toggles the overlay; Ctrl+Shift+X restores clicks.")}</small>
           </span>
           <input
             type="range"
@@ -157,54 +167,60 @@ export function SettingsDialog({
         </label>
         <button
           className="dialog-button secondary"
-          onClick={() => void onOverlayAction(resetOverlayWindow, "Overlay could not be reset")}
+          onClick={() => void onOverlayAction(resetOverlayWindow, t("Overlay could not be reset"))}
         >
-          RESET & SHOW OVERLAY
+          {t("RESET & SHOW OVERLAY")}
         </button>
       </div>
       <div className="dialog-section diagnostics">
-        <h3>DIAGNOSTICS</h3>
+        <h3>{t("DIAGNOSTICS")}</h3>
         <dl className="telemetry-list">
           <div>
-            <dt>RUNTIME</dt>
-            <dd>{isTauriRuntime() ? "TAURI DESKTOP" : "BROWSER PREVIEW"}</dd>
+            <dt>{t("RUNTIME")}</dt>
+            <dd>{isTauriRuntime() ? t("TAURI DESKTOP") : t("BROWSER PREVIEW")}</dd>
           </div>
           <div>
-            <dt>RAID STATE</dt>
-            <dd>{mapSession.inRaid ? "IN RAID" : "NOT DETECTED"}</dd>
+            <dt>{t("RAID STATE")}</dt>
+            <dd>{mapSession.inRaid ? t("IN RAID") : t("NOT DETECTED")}</dd>
           </div>
           <div>
-            <dt>MAP SOURCE</dt>
-            <dd>{mapSession.source.toUpperCase()}</dd>
+            <dt>{t("MAP SOURCE")}</dt>
+            <dd>{t(mapSession.source.toUpperCase())}</dd>
           </div>
           <div>
-            <dt>VIEW MODE</dt>
-            <dd>{mapSession.browsingAway ? "BROWSING AWAY" : "FOLLOWING RAID"}</dd>
+            <dt>{t("VIEW MODE")}</dt>
+            <dd>{mapSession.browsingAway ? t("BROWSING AWAY") : t("FOLLOWING RAID")}</dd>
           </div>
           <div>
-            <dt>OVERLAY</dt>
-            <dd>{overlayState.visible ? (overlayState.clickThrough ? "CLICK-THROUGH" : "INTERACTIVE") : "HIDDEN"}</dd>
+            <dt>{t("OVERLAY")}</dt>
+            <dd>
+              {overlayState.visible ? (overlayState.clickThrough ? t("CLICK-THROUGH") : t("INTERACTIVE")) : t("HIDDEN")}
+            </dd>
           </div>
           <div>
-            <dt>SHORTCUTS</dt>
-            <dd>{overlayState.shortcutReady ? "READY" : "UNAVAILABLE"}</dd>
+            <dt>{t("SHORTCUTS")}</dt>
+            <dd>{overlayState.shortcutReady ? t("READY") : t("UNAVAILABLE")}</dd>
           </div>
           <div>
-            <dt>LAST FILE</dt>
+            <dt>{t("LAST FILE")}</dt>
             <dd title={status.lastFilename ?? ""}>{status.lastFilename ?? "-"}</dd>
           </div>
           <div>
-            <dt>INTEL BUILD</dt>
-            <dd>{dataGeneratedAt ? new Date(dataGeneratedAt).toLocaleDateString() : "UNKNOWN"}</dd>
+            <dt>{t("INTEL BUILD")}</dt>
+            <dd>
+              {dataGeneratedAt
+                ? new Date(dataGeneratedAt).toLocaleDateString(language === "en" ? "en-US" : "zh-CN")
+                : t("UNKNOWN")}
+            </dd>
           </div>
           <div>
-            <dt>EXTRACT OCR</dt>
-            <dd>{raidExtracts?.status.toUpperCase() ?? "UNKNOWN"}</dd>
+            <dt>{t("EXTRACT OCR")}</dt>
+            <dd>{t(raidExtracts?.status.toUpperCase() ?? "UNKNOWN")}</dd>
           </div>
         </dl>
-        <p className={`diagnostic-status ${status.level}`}>{status.message}</p>
+        <p className={`diagnostic-status ${status.level}`}>{localizeMessage(status.message)}</p>
         {(overlayState.lastError || status.lastError) && (
-          <p className="error-box">{overlayState.lastError ?? status.lastError}</p>
+          <p className="error-box">{localizeMessage(overlayState.lastError ?? status.lastError)}</p>
         )}
       </div>
     </Dialog>

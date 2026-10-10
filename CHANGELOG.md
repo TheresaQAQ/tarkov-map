@@ -6,6 +6,15 @@ All notable changes to Raid Signal are recorded here. The format follows
 
 ## [Unreleased]
 
+## [1.4.1 中文版] - 2026-10-10
+
+- 基于上游 v1.4.1，新增桌面端、浮窗和手机端的简体中文界面与英文切换。
+- 按来源词条键查询中英游戏原文，避免同名地图、任务和商人互相覆盖。
+- 改用清晰的字体，提高字号、字重和文字对比度。
+- Windows 安装向导支持简体中文与英文，继续兼容 settings v2 和 protocol v1。
+- 升级 Sharp 与 source-map-js 的安全补丁版本。
+- 发行附件由 GitHub Actions 构建、扫描并提供校验、SBOM 与来源证明。
+
 ## [1.4.1] - 2026-09-24
 
 ### Added

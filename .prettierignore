@@ -5,6 +5,7 @@ src-tauri/target/
 src-tauri/gen/
 public/maps/
 src/data/maps.generated.json
+src/locales/tarkov-zh-CN.json
 package-lock.json
 relay/package-lock.json
 src-tauri/Cargo.lock

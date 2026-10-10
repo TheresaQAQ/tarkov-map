@@ -1,48 +1,31 @@
-## What changed
+## Raid Signal v1.4.1 中文版
 
-Raid Signal v1.4.1 makes extraction names readable at the map overview, adds
-useful quest-marker details, and gives phone users control over their waypoints.
+基于 [QTtrash/tarkov-map](https://github.com/QTtrash/tarkov-map) 的 v1.4.1，增加简体中文界面并保留英文切换。这是 TheresaQAQ 维护的汉化发行版，原项目及资源作者的署名与许可证保持不变。
 
-- Enabled extraction names appear immediately on desktop, compact overlay, and
-  phone, preserving filters, floors, active styling, and map interaction.
-- Quest markers open the correct quest and objective, including offline text,
-  a location preview, and bundled artwork where available. Generic quest images
-  and possible spawn locations are clearly labeled.
-- Quest artwork comes from Tarkov.dev's task image metadata and image CDN;
-  credits and source links appear with the image. See the
-  [asset provenance and restrictions](https://github.com/QTtrash/tarkov-map/blob/v1.4.1/ASSET_LICENSES.md).
-- Phone users can delete one waypoint or clear waypoints on the current map;
-  other maps' waypoints remain intact after reloading.
-- Related fixes preserve cross-map quest focus, render waypoint tooltips safely,
-  contain keyboard interactions, and serve WebP images correctly.
-- Sharp is updated to 0.35.4 to resolve its reported dependency vulnerability.
+## 本次更新
 
-## Compatibility, privacy, and limits
+- 桌面端、原生地图浮窗和手机端默认简体中文，可切换为英文并保存选择。
+- 地图、撤离点、任务、物品和商人名称通过来源词条键取中英原文；保留来源中的英文昵称，缺少可靠对照时不猜译名。
+- 使用微软雅黑，提高文字字号、字重和对比度。
+- Windows x64 安装向导支持简体中文与英文。
+- 修复 Sharp 和 source-map-js 的已知依赖漏洞。
 
-Settings schema v2 and room protocol v1 remain compatible. Quest profiles and
-progress remain local and are not synchronized to the phone. Bundled quest
-images work offline without external image requests. Invitation keys remain in
-URL fragments, the relay forwards ciphertext only, and no position history is
-stored.
+## 下载与校验
 
-Quest-log import remains experimental because current Tarkov builds may not
-retain a safely attributable supported event format. Manual quest selection is
-still the reliable fallback. Never publish raw Tarkov logs.
+下载下面附件中的 `Raid-Signal-Setup-1.4.1.exe`。同页提供 `.sha256` 校验文件、`release.json`、SPDX SBOM 和 GitHub 构建来源证明。
 
-Raid Signal does not read game memory, inject input, automate play, modify game
-files, or claim anti-cheat approval. It is independent and not endorsed by
-Battlestate Games.
+安装包由本仓库的发布工作流构建，必须通过项目检查、浏览器测试、Microsoft Defender 和独立 ClamAV 扫描后才会发布。
 
-## Install and verify
+这是未签名的 Windows 安装包，系统可能显示“未知发布者”。运行安装好的程序不需要 Rust、Node.js 或编译环境。
 
-Download installers only from this immutable GitHub Release. Assets include a
-SHA-256 checksum, `release.json`, an SPDX SBOM, Microsoft Defender and ClamAV
-scan gates, and GitHub build provenance.
+## 兼容性与隐私
 
-- [Installation and verification](https://github.com/QTtrash/tarkov-map#install-and-verify)
-- [Source code](https://github.com/QTtrash/tarkov-map)
-- [Privacy policy](https://github.com/QTtrash/tarkov-map/blob/main/PRIVACY.md)
-- [License and asset boundary](https://github.com/QTtrash/tarkov-map/blob/main/ASSET_LICENSES.md)
+继续兼容 settings schema v2 和 room protocol v1。任务进度保存在本机；邀请密钥仅保留在 URL 的 `#` 片段中，中继只转发密文，不保存位置历史。
 
-The Windows installer is currently unsigned and may show an unknown-publisher
-warning.
+任务日志自动导入仍是实验性功能。不要公开原始游戏日志。应用不读取游戏内存、不注入输入、不修改游戏文件，也不宣称获得官方或反作弊认可。
+
+- [中文使用说明](https://github.com/TheresaQAQ/tarkov-map/blob/v1.4.1/README.zh-CN.md)
+- [中英术语对照和来源](https://github.com/TheresaQAQ/tarkov-map/blob/v1.4.1/docs/TARKOV_TERMINOLOGY.md)
+- [源代码](https://github.com/TheresaQAQ/tarkov-map/tree/v1.4.1)
+- [资源许可证与署名](https://github.com/TheresaQAQ/tarkov-map/blob/v1.4.1/ASSET_LICENSES.md)
+- [原项目](https://github.com/QTtrash/tarkov-map)

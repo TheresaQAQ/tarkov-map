@@ -48,6 +48,12 @@
   "bundle": {
     "active": true,
     "targets": ["nsis"],
+    "windows": {
+      "nsis": {
+        "languages": ["SimpChinese", "English"],
+        "displayLanguageSelector": true
+      }
+    },
     "category": "Utility",
     "shortDescription": "Local-first encrypted raid navigator",
     "longDescription": "Displays screenshot coordinates on offline interactive maps with active-extract OCR, quests, overlay, and end-to-end encrypted squad sharing.",

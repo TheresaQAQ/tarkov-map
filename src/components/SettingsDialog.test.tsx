@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { defaultSettings } from "../locator";
 import type { LocatorStatus } from "../types";
 import { SettingsDialog } from "./SettingsDialog";
+import { languageStorageKey, setLanguage } from "../i18n";
 
 const status: LocatorStatus = {
   level: "info",
@@ -58,5 +59,20 @@ describe("SettingsDialog", () => {
 
     view.rerender(<SettingsDialog {...initial} status={{ ...status, message: "Locator paths refreshed" }} />);
     await waitFor(() => expect(screen.getByText("Folder paths refreshed")).toBeVisible());
+  });
+
+  it("switches the open dialog immediately and keeps the settings v2 payload intact", () => {
+    setLanguage("zh-CN");
+    const initial = props();
+    render(<SettingsDialog {...initial} />);
+    expect(screen.getByRole("dialog", { name: "Raid Signal 设置" })).toBeVisible();
+    expect(screen.getByText("战局识别已连接")).toBeVisible();
+    fireEvent.change(screen.getByRole("combobox", { name: "语言" }), { target: { value: "en" } });
+    expect(screen.getByRole("dialog", { name: "Raid Signal settings" })).toBeVisible();
+    expect(screen.getByText("Raid detection connected")).toBeVisible();
+    expect(document.documentElement.lang).toBe("en");
+    expect(localStorage.getItem(languageStorageKey)).toBe("en");
+    expect(initial.onUpdateSettings).not.toHaveBeenCalled();
+    expect(initial.settings.schemaVersion).toBe(2);
   });
 });

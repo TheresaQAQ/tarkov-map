@@ -1,3 +1,4 @@
+import { categoryLabel, t, poiName } from "../i18n";
 import L from "leaflet";
 import { lootGroupForType } from "../poi";
 import type { LootGroupId, MapAsset, MapDefinition, MapPoi, PoiCategory, SquadPosition } from "../types";
@@ -129,7 +130,7 @@ function glyphMarkup(category: PoiCategory, lootGroup?: LootGroupId) {
 
 export function poiIcon(poi: MapPoi, selected: boolean, active = false) {
   const lootGroup = poi.kind === "loot" ? lootGroupForType(poi.lootType) : undefined;
-  const label = poi.kind === "transit" ? `<span class="poi-marker-label">${escapeHtml(poi.name)}</span>` : "";
+  const label = poi.kind === "transit" ? `<span class="poi-marker-label">${escapeHtml(poiName(poi))}</span>` : "";
   const candidate = poi.kind === "quest-possible-location" ? " quest-possible-location" : "";
   return L.divIcon({
     className: "poi-marker-shell",
@@ -149,30 +150,36 @@ export function popupContent(
   content.className = "poi-popup-content";
   const kicker = document.createElement("span");
   kicker.className = "poi-popup-kicker";
-  kicker.textContent = poi.category.replaceAll("-", " ");
+  kicker.textContent = categoryLabel(poi.category);
   const title = document.createElement("strong");
-  title.textContent = poi.name;
+  title.textContent = poiName(poi);
   const elevation = document.createElement("small");
-  elevation.textContent = `Elevation ${poi.position.y.toFixed(1)} m`;
+  elevation.textContent = t("Elevation {value} m", { value: poi.position.y.toFixed(1) });
   content.append(kicker, title, elevation);
   if (poi.kind === "extract" && poi.transferItem) {
     const requirement = document.createElement("small");
-    requirement.textContent = `Payment required: ${poi.transferItem.count.toLocaleString()} units`;
+    requirement.textContent = t("Payment required: {count} units", { count: poi.transferItem.count.toLocaleString() });
     content.append(requirement);
   }
   if (poi.kind === "boss-zone") {
     const chance = document.createElement("small");
-    chance.textContent = `Raid chance ${Math.round(poi.spawnChance * 100)}% · zone weight ${Math.round(poi.zoneChance * 100)}%`;
+    chance.textContent = t("Raid chance {raid}% · zone weight {zone}%", {
+      raid: Math.round(poi.spawnChance * 100),
+      zone: Math.round(poi.zoneChance * 100),
+    });
     content.append(chance);
   }
   if (poi.kind === "quest-possible-location" && poi.locationCount) {
     const candidate = document.createElement("small");
-    candidate.textContent = `Possible location ${(poi.locationIndex ?? 0) + 1} of ${poi.locationCount}`;
+    candidate.textContent = t("Possible location {index} of {count}", {
+      index: (poi.locationIndex ?? 0) + 1,
+      count: poi.locationCount,
+    });
     content.append(candidate);
   }
   if (poi.kind === "locked-door" && poi.keyIds.length) {
     const key = document.createElement("small");
-    key.textContent = `Required key ID: ${poi.keyIds.join(", ")}`;
+    key.textContent = t("Required key ID: {keys}", { keys: poi.keyIds.join(", ") });
     content.append(key);
   }
 
@@ -187,7 +194,10 @@ export function popupContent(
   for (const linked of links) {
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = poi.kind === "extract" ? `Activation: ${linked.name}` : `Controls: ${linked.name}`;
+    button.textContent =
+      poi.kind === "extract"
+        ? t("Activation: {name}", { name: poiName(linked) })
+        : t("Controls: {name}", { name: poiName(linked) });
     button.addEventListener("click", () => onFocus(linked.id));
     content.append(button);
   }
@@ -195,7 +205,7 @@ export function popupContent(
     const button = document.createElement("button");
     button.type = "button";
     button.className = "delete-waypoint";
-    button.textContent = "Delete waypoint";
+    button.textContent = t("Delete waypoint");
     button.addEventListener("click", (event) => {
       event.stopPropagation();
       onDeleteWaypoint(poi.id);

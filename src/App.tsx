@@ -1,4 +1,7 @@
+import { localizeMessage, t, gm } from "./i18n";
+import { useLanguage } from "./use-language";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { LanguageSelect } from "./components/LanguageSelect";
 import { IntelDrawer } from "./components/IntelDrawer";
 import { UiIcon } from "./components/Icons";
 import { MapView } from "./components/MapView";
@@ -85,9 +88,9 @@ function coordinate(value: number) {
 
 function elapsedLabel(observedAt: number, now: number) {
   const seconds = Math.max(0, Math.floor((now - observedAt) / 1000));
-  if (seconds < 2) return "JUST NOW";
-  if (seconds < 60) return `${seconds} SEC AGO`;
-  return `${Math.floor(seconds / 60)} MIN AGO`;
+  if (seconds < 2) return t("JUST NOW");
+  if (seconds < 60) return t("{count} SEC AGO", { count: seconds });
+  return t("{count} MIN AGO", { count: Math.floor(seconds / 60) });
 }
 
 function normalizedVisibleLayers(layers: string[]) {
@@ -96,6 +99,7 @@ function normalizedVisibleLayers(layers: string[]) {
 }
 
 export function App() {
+  useLanguage();
   const [settings, setSettings] = useState<LocatorSettings>(defaultSettings);
   const [status, setStatus] = useState<LocatorStatus>(initialStatus);
   const [fix, setFix] = useState<PlayerFix | null>(null);
@@ -531,9 +535,10 @@ export function App() {
     return (
       <main className="empty-state">
         <div className="spinner" />
-        <h1>Map assets are unavailable</h1>
+        <h1>{t("Map assets are unavailable")}</h1>
         <p>
-          Run <code>npm run assets:sync</code>, then restart.
+          {t("Run")} <code>npm run assets:sync</code>
+          {t(", then restart.")}
         </p>
       </main>
     );
@@ -561,13 +566,13 @@ export function App() {
           <span className="brand-sigil">RS</span>
           <div>
             <strong>RAID SIGNAL</strong>
-            <span>FIELD POSITION SYSTEM</span>
+            <span>{t("FIELD POSITION SYSTEM")}</span>
           </div>
         </div>
 
         <div className="command-selects">
           <label className="command-field">
-            <span>LOCATION</span>
+            <span>{t("LOCATION")}</span>
             <select
               value={definition.id}
               onChange={(event) => {
@@ -576,13 +581,13 @@ export function App() {
             >
               {maps.map((map) => (
                 <option value={map.id} key={map.id}>
-                  {map.displayName}
+                  {gm(map.displayName)}
                 </option>
               ))}
             </select>
           </label>
           <label className="command-field">
-            <span>LEVEL</span>
+            <span>{t("LEVEL")}</span>
             <select
               value={floorMode}
               onChange={(event) => {
@@ -591,11 +596,11 @@ export function App() {
               }}
             >
               <option value="auto">
-                AUTO / {floors.find((floor) => floor.id === activeFloor)?.name.toUpperCase() ?? "MAIN"}
+                {t("AUTO /")} {t(floors.find((floor) => floor.id === activeFloor)?.name ?? "MAIN").toUpperCase()}
               </option>
               {floors.map((floor) => (
                 <option value={floor.id} key={floor.id}>
-                  {floor.name}
+                  {t(floor.name)}
                 </option>
               ))}
             </select>
@@ -603,36 +608,37 @@ export function App() {
         </div>
 
         <div className="command-actions">
+          <LanguageSelect />
           <span className={status.screenshotWatcherReady ? "system-chip online" : "system-chip"}>
             <i />
-            {status.screenshotWatcherReady ? "LOCATOR ONLINE" : "LOCATOR OFFLINE"}
+            {status.screenshotWatcherReady ? t("LOCATOR ONLINE") : t("LOCATOR OFFLINE")}
           </span>
           <button
             className={settings.followPlayer ? "command-button active" : "command-button"}
             onClick={() => setFollow(!settings.followPlayer)}
           >
             <UiIcon name="target" />
-            {settings.followPlayer ? "FOLLOWING" : "FOLLOW"}
+            {settings.followPlayer ? t("FOLLOWING") : t("FOLLOW")}
           </button>
           <button
             className={overlayState.visible ? "command-button active" : "command-button"}
-            onClick={() => void runOverlayAction(toggleOverlay, "Overlay could not be toggled")}
-            title="Toggle compact overlay (Ctrl+Shift+M)"
+            onClick={() => void runOverlayAction(toggleOverlay, t("Overlay could not be toggled"))}
+            title={t("Toggle compact overlay (Ctrl+Shift+M)")}
           >
-            {overlayState.visible ? "HIDE OVERLAY" : "OVERLAY"}
+            {overlayState.visible ? t("HIDE OVERLAY") : t("OVERLAY")}
           </button>
           <button
             className={settings.alwaysOnTop ? "icon-command active" : "icon-command"}
             onClick={() => updateSettings({ alwaysOnTop: !settings.alwaysOnTop })}
-            aria-label="Pin window"
-            title="Pin window"
+            aria-label={t("Pin window")}
+            title={t("Pin window")}
           >
             <UiIcon name="pin" />
           </button>
-          <button className="icon-command" onClick={() => setShowSettings(true)} aria-label="Settings">
+          <button className="icon-command" onClick={() => setShowSettings(true)} aria-label={t("Settings")}>
             <UiIcon name="settings" />
           </button>
-          <button className="icon-command" onClick={() => setShowAbout(true)} aria-label="About">
+          <button className="icon-command" onClick={() => setShowAbout(true)} aria-label={t("About")}>
             <UiIcon name="info" />
           </button>
         </div>
@@ -641,43 +647,44 @@ export function App() {
       <section className="workspace">
         <aside className="telemetry-panel">
           <div className="telemetry-heading">
-            <span>POSITION TELEMETRY</span>
-            <b className={stale ? "stale" : ""}>{fix ? elapsedLabel(fix.observedAt, now) : "NO FIX"}</b>
+            <span>{t("POSITION TELEMETRY")}</span>
+            <b className={stale ? "stale" : ""}>{fix ? elapsedLabel(fix.observedAt, now) : t("NO FIX")}</b>
           </div>
           {fix ? (
             <>
               <div className="coordinate-stack">
                 <div>
-                  <span>X / EAST</span>
+                  <span>{t("X / EAST")}</span>
                   <strong>{coordinate(fix.position.x)}</strong>
                 </div>
                 <div>
-                  <span>Y / ELEV</span>
+                  <span>{t("Y / ELEV")}</span>
                   <strong>{coordinate(fix.position.y)}</strong>
                 </div>
                 <div>
-                  <span>Z / NORTH</span>
+                  <span>{t("Z / NORTH")}</span>
                   <strong>{coordinate(fix.position.z)}</strong>
                 </div>
               </div>
               <dl className="telemetry-list">
                 <div>
-                  <dt>RAID LOCATION</dt>
+                  <dt>{t("RAID LOCATION")}</dt>
                   <dd>
-                    {getMapDefinition(fix.mapId)?.displayName ?? detectedDefinition?.displayName ?? "UNCONFIRMED"}
+                    {gm(getMapDefinition(fix.mapId)?.displayName ?? detectedDefinition?.displayName) ||
+                      t("UNCONFIRMED")}
                   </dd>
                 </div>
                 <div>
-                  <dt>LEVEL</dt>
-                  <dd>{floors.find((floor) => floor.id === activeFloor)?.name ?? activeFloor}</dd>
+                  <dt>{t("LEVEL")}</dt>
+                  <dd>{t(floors.find((floor) => floor.id === activeFloor)?.name ?? activeFloor)}</dd>
                 </div>
                 <div>
-                  <dt>VECTOR</dt>
-                  <dd>{fix.forward ? "HEADING LOCK" : "POSITION ONLY"}</dd>
+                  <dt>{t("VECTOR")}</dt>
+                  <dd>{fix.forward ? t("HEADING LOCK") : t("POSITION ONLY")}</dd>
                 </div>
                 {fix.gameTime !== null && (
                   <div>
-                    <dt>LOCAL TIME</dt>
+                    <dt>{t("LOCAL TIME")}</dt>
                     <dd>{fix.gameTime.toFixed(2)}</dd>
                   </div>
                 )}
@@ -689,7 +696,7 @@ export function App() {
                   void clearPlayerPosition();
                 }}
               >
-                CLEAR POSITION
+                {t("CLEAR POSITION")}
               </button>
             </>
           ) : (
@@ -697,20 +704,20 @@ export function App() {
               <span className="scan-reticle">
                 <i />
               </span>
-              <strong>AWAITING SCREENSHOT</strong>
-              <p>Take an in-game screenshot to acquire your position.</p>
+              <strong>{t("AWAITING SCREENSHOT")}</strong>
+              <p>{t("Take an in-game screenshot to acquire your position.")}</p>
             </div>
           )}
 
           <div className="panel-rule" />
           <div className="telemetry-heading">
-            <span>MAP INTELLIGENCE</span>
-            <b>{poiLoading ? "SYNC" : `${visibleCount} SHOWN`}</b>
+            <span>{t("MAP INTELLIGENCE")}</span>
+            <b>{poiLoading ? t("SYNC") : t("{count} SHOWN", { count: visibleCount })}</b>
           </div>
           <div className="intel-summary">
             <div>
               <strong>{Object.values(definition.poiCounts).reduce((sum, count) => sum + (count ?? 0), 0)}</strong>
-              <span>KNOWN POINTS</span>
+              <span>{t("KNOWN POINTS")}</span>
             </div>
             <div>
               <strong>
@@ -718,36 +725,36 @@ export function App() {
                   (definition.poiCounts["extract-scav"] ?? 0) +
                   (definition.poiCounts["extract-shared"] ?? 0)}
               </strong>
-              <span>EXTRACTS</span>
+              <span>{t("EXTRACTS")}</span>
             </div>
           </div>
           <button className="panel-button" onClick={() => updateSettings({ legendOpen: true })}>
             <UiIcon name="layers" />
-            OPEN INTELLIGENCE
+            {t("OPEN INTELLIGENCE")}
           </button>
           <button className="panel-button secondary" onClick={() => setShowQuests(true)}>
-            QUEST NAVIGATOR
+            {t("QUEST NAVIGATOR")}
           </button>
           <button className="panel-button secondary" onClick={() => setShowSharing(true)}>
-            PHONE / SQUAD LINK
+            {t("PHONE / SQUAD LINK")}
           </button>
 
           <div className="panel-status">
             <div>
               <i className={status.screenshotWatcherReady ? "ready" : ""} />
-              <span>SCREENSHOT WATCHER</span>
-              <b>{status.screenshotWatcherReady ? "READY" : "CHECK PATH"}</b>
+              <span>{t("SCREENSHOT WATCHER")}</span>
+              <b>{status.screenshotWatcherReady ? t("READY") : t("CHECK PATH")}</b>
             </div>
             <div>
               <i className={status.logWatcherReady ? "ready" : ""} />
-              <span>RAID DETECTION</span>
-              <b>{status.logWatcherReady ? "READY" : "MANUAL"}</b>
+              <span>{t("RAID DETECTION")}</span>
+              <b>{status.logWatcherReady ? t("READY") : t("MANUAL")}</b>
             </div>
           </div>
           <footer>
-            <span>NOT AFFILIATED WITH BATTLESTATE GAMES</span>
+            <span>{t("NOT AFFILIATED WITH BATTLESTATE GAMES")}</span>
             <a href={definition.attribution.url} target="_blank" rel="noreferrer">
-              MAP BY {definition.attribution.name.toUpperCase()}
+              {t("MAP BY")} {definition.attribution.name.toUpperCase()}
             </a>
           </footer>
         </aside>
@@ -774,32 +781,32 @@ export function App() {
             onAssetStateChange={setMapAssetState}
           />
           <div className="map-title-plate">
-            <span>{mapSession.browsingAway ? "BROWSING MAP" : "ACTIVE MAP"}</span>
-            <strong>{definition.displayName}</strong>
+            <span>{mapSession.browsingAway ? t("BROWSING MAP") : t("ACTIVE MAP")}</span>
+            <strong>{gm(definition.displayName)}</strong>
             <small>
-              {floors.find((floor) => floor.id === activeFloor)?.name} /{" "}
-              {mapSession.inRaid ? "RAID DETECTED" : "MANUAL CONTEXT"}
+              {t(floors.find((floor) => floor.id === activeFloor)?.name)} /{" "}
+              {mapSession.inRaid ? t("RAID DETECTED") : t("MANUAL CONTEXT")}
             </small>
           </div>
           {mapSession.browsingAway && detectedDefinition && (
             <div className="raid-map-banner">
               <span>
-                Raid telemetry remains on <b>{detectedDefinition.displayName}</b>
+                {t("Raid telemetry remains on")} <b>{gm(detectedDefinition.displayName)}</b>
               </span>
-              <button onClick={returnToRaid}>RETURN TO RAID</button>
+              <button onClick={returnToRaid}>{t("RETURN TO RAID")}</button>
             </div>
           )}
           {mapAssetState.status === "error" && (
             <div className="map-asset-error">
-              <strong>MAP COULD NOT LOAD</strong>
-              <span>{mapAssetState.message}</span>
-              <button onClick={() => setMapRetry((value) => value + 1)}>RETRY MAP</button>
+              <strong>{t("MAP COULD NOT LOAD")}</strong>
+              <span>{localizeMessage(mapAssetState.message)}</span>
+              <button onClick={() => setMapRetry((value) => value + 1)}>{t("RETRY MAP")}</button>
             </div>
           )}
           {!settings.followPlayer && visibleFix && (
             <button className="floating-follow" onClick={() => setFollow(true)}>
               <UiIcon name="center" />
-              CENTER ON PLAYER
+              {t("CENTER ON PLAYER")}
             </button>
           )}
           {customPins.some((pin) => pin.id.startsWith(`pin-${definition.id}-`)) && (
@@ -809,7 +816,7 @@ export function App() {
                 setCustomPins((current) => current.filter((pin) => !pin.id.startsWith(`pin-${definition.id}-`)))
               }
             >
-              CLEAR WAYPOINTS
+              {t("CLEAR WAYPOINTS")}
             </button>
           )}
           <IntelDrawer

@@ -1,3 +1,5 @@
+import { localizeMessage, t, gm } from "../i18n";
+import { useLanguage } from "../use-language";
 import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getMapDefinition, maps } from "../data/maps";
@@ -28,6 +30,7 @@ import type {
   RaidExtractState,
   SquadPosition,
 } from "../types";
+import { LanguageSelect } from "./LanguageSelect";
 import { UiIcon } from "./Icons";
 import { MapView } from "./MapView";
 
@@ -35,6 +38,7 @@ const noop = () => undefined;
 const idleAsset: MapAssetState = { status: "idle", asset: null, message: null };
 
 export function OverlayApp() {
+  useLanguage();
   const [settings, setSettings] = useState<LocatorSettings>(defaultSettings);
   const [fix, setFix] = useState<PlayerFix | null>(null);
   const [squadPositions, setSquadPositions] = useState<SquadPosition[]>([]);
@@ -187,18 +191,19 @@ export function OverlayApp() {
     <main className="overlay-shell" style={{ opacity: settings.overlayOpacity }}>
       <header className="overlay-bar" data-tauri-drag-region>
         <div data-tauri-drag-region>
-          <span>{definition.displayName}</span>
-          <b>{fix ? "POSITION LIVE" : "AWAITING FIX"}</b>
+          <span>{gm(definition.displayName)}</span>
+          <b>{fix ? t("POSITION LIVE") : t("AWAITING FIX")}</b>
         </div>
         <div>
+          <LanguageSelect />
           <button
             onClick={() => setClickThroughCountdown(3)}
-            title="Enable click-through after a countdown; Ctrl+Shift+X restores interaction"
-            aria-label="Enable click-through"
+            title={t("Enable click-through after a countdown; Ctrl+Shift+X restores interaction")}
+            aria-label={t("Enable click-through")}
           >
             <UiIcon name="pin" size={15} />
           </button>
-          <button onClick={() => void hideOverlay()} aria-label="Hide overlay">
+          <button onClick={() => void hideOverlay()} aria-label={t("Hide overlay")}>
             <UiIcon name="close" size={15} />
           </button>
         </div>
@@ -225,30 +230,34 @@ export function OverlayApp() {
         {(assetState.status === "loading" || !bundle) && !bundleError && (
           <div className="overlay-state">
             <span className="spinner" />
-            <strong>LOADING {definition.displayName.toUpperCase()}</strong>
+            <strong>
+              {t("LOADING")} {gm(definition.displayName)}
+            </strong>
           </div>
         )}
         {(assetState.status === "error" || bundleError) && (
           <div className="overlay-state error">
-            <strong>MAP COULD NOT LOAD</strong>
-            <small>{assetState.status === "error" ? assetState.message : bundleError}</small>
-            <button onClick={retry}>RETRY</button>
+            <strong>{t("MAP COULD NOT LOAD")}</strong>
+            <small>{localizeMessage(assetState.status === "error" ? assetState.message : bundleError)}</small>
+            <button onClick={retry}>{t("RETRY")}</button>
           </div>
         )}
         {clickThroughCountdown !== null && (
           <div className="overlay-countdown">
-            <strong>CLICK-THROUGH IN {clickThroughCountdown}</strong>
-            <span>Ctrl+Shift+X always restores control</span>
-            <button onClick={() => setClickThroughCountdown(null)}>CANCEL</button>
+            <strong>
+              {t("CLICK-THROUGH IN")} {clickThroughCountdown}
+            </strong>
+            <span>{t("Ctrl+Shift+X always restores control")}</span>
+            <button onClick={() => setClickThroughCountdown(null)}>{t("CANCEL")}</button>
           </div>
         )}
         <div className="overlay-readout">
           <strong>
             {raidExtractsForMap?.status === "recognized"
-              ? `${raidExtractsForMap.activeExtractIds.length} ACTIVE EXITS`
-              : "EXITS UNKNOWN"}
+              ? t("{count} ACTIVE EXITS", { count: raidExtractsForMap.activeExtractIds.length })
+              : t("EXITS UNKNOWN")}
           </strong>
-          <span>{fix ? `${fix.position.x.toFixed(1)} / ${fix.position.z.toFixed(1)}` : "TAKE SCREENSHOT"}</span>
+          <span>{fix ? `${fix.position.x.toFixed(1)} / ${fix.position.z.toFixed(1)}` : t("TAKE SCREENSHOT")}</span>
         </div>
       </section>
     </main>

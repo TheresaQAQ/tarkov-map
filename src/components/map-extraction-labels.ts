@@ -1,3 +1,4 @@
+import { t, poiName } from "../i18n";
 import L from "leaflet";
 import { layoutExtractionLabels } from "../extraction-labels";
 import type { ExtractPoi } from "../types";
@@ -49,7 +50,7 @@ export function installExtractionLabels(
       const label = document.createElement("span");
       label.className = `extraction-label ${poi.category}${active.has(poi.id) ? " raid-active" : ""}${selectedId === poi.id ? " selected" : ""}`;
       label.dataset.extractId = poi.id;
-      label.textContent = poi.name;
+      label.textContent = poiName(poi);
       label.setAttribute("aria-hidden", "true");
       layer.append(label);
       elements.set(poi.id, label);
@@ -94,7 +95,7 @@ export function installExtractionLabels(
       const list = document.createElement("div");
       list.className = "extraction-overflow";
       list.setAttribute("role", "region");
-      list.setAttribute("aria-label", "Crowded extraction names");
+      list.setAttribute("aria-label", t("Crowded extraction names"));
       list.style.width = `${listWidth}px`;
       list.style.maxHeight = `${listHeight}px`;
       L.DomEvent.disableClickPropagation(list);
@@ -112,7 +113,7 @@ export function installExtractionLabels(
           const button = document.createElement("button");
           button.type = "button";
           button.className = active.has(id) ? "raid-active" : "";
-          button.textContent = `${index + 1}. ${poi.name}`;
+          button.textContent = `${index + 1}. ${poiName(poi)}`;
           button.dataset.extractId = id;
           button.addEventListener("click", () => {
             marker.openPopup();

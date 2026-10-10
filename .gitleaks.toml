@@ -8,3 +8,27 @@ targetRules = ["generic-api-key"]
 regexTarget = "line"
 regexes = ['''^\s*"key": "[a-z0-9-]+",?\s*$''']
 paths = ['''^public/maps/upstream-maps\.json$''']
+
+[[allowlists]]
+description = "Paired Tarkov locale keys contain public 24-character game identifiers"
+condition = "AND"
+targetRules = ["generic-api-key"]
+regexTarget = "line"
+regexes = ['''^\s*"key": "[a-f0-9]{24}(?: (?:[Nn]ame|ShortName|Description|Nickname|FirstName|FullName|Location)| startedMessageText [a-f0-9]{24} [0-9]+)?",?\s*$''']
+paths = ['''^src/locales/tarkov-zh-CN\.json$''']
+
+[[allowlists]]
+description = "Public symbolic Tarkov locale keys identify game zones, extracts, and UI text"
+condition = "AND"
+targetRules = ["generic-api-key"]
+regexTarget = "line"
+regexes = ['''^\s*"key": "(?:Zone[A-Za-z0-9_]+|BotZone[A-Za-z0-9_]+|(?:SHO|FAC|REZ|WOO|CUS|LIG)_TRANSIT_[0-9]+_DESC|EXFIL_[Bb][Uu][Nn][Kk][Ee][Rr]_D2|(?:QuestCondition|QuestConditionVariable|Achievements|APCTab|EDLSSPreset|Hideout|Runddans|UI|arena|hideout)/[A-Za-z0-9_/]+|NosQuests_[0-9]+_Flaer)",?\s*$''']
+paths = ['''^src/locales/tarkov-zh-CN\.json$''']
+
+[[allowlists]]
+description = "Therapist's source locale nickname key is a public game identifier in its regression test"
+condition = "AND"
+targetRules = ["generic-api-key"]
+regexTarget = "line"
+regexes = ['''^\s*expect\(g\("Therapist", "54cb57776803fa99248b456e Nickname"\)\)\.toBe\("Therapist"\);\s*$''']
+paths = ['''^src/locales/game-text\.test\.ts$''']

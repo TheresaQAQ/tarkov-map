@@ -1,7 +1,10 @@
 :root {
+  --font-ui: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
   color: #e4dfd2;
   background: #090b0a;
-  font-family: "IBM Plex Sans Condensed", "Segoe UI", sans-serif;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --canvas: #090b0a;
@@ -10,9 +13,9 @@
   --raised-2: #1d211d;
   --rule: #343832;
   --rule-soft: #262a26;
-  --bone: #e4dfd2;
-  --muted: #8c9188;
-  --faint: #60655f;
+  --bone: #f0ece2;
+  --muted: #b4b9af;
+  --faint: #969e92;
   --signal: #aeb89a;
   --pmc: #85c79d;
   --scav: #d59b55;
@@ -109,16 +112,13 @@ a:focus-visible {
   gap: 2px;
 }
 .overlay-bar span {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.07em;
-  text-transform: uppercase;
 }
 .overlay-bar b {
   color: var(--pmc);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .overlay-bar > div:last-child {
   height: 100%;
@@ -160,15 +160,11 @@ a:focus-visible {
 }
 .overlay-readout strong {
   color: var(--pmc);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .overlay-readout span {
   color: var(--muted);
-  font:
-    400 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .overlay-state,
 .overlay-countdown {
@@ -192,18 +188,14 @@ a:focus-visible {
 .overlay-state strong,
 .overlay-countdown strong {
   color: var(--bone);
-  font:
-    500 10px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
 }
 .overlay-state small,
 .overlay-countdown span {
   max-width: 300px;
   color: var(--muted);
-  font:
-    400 8px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
   overflow-wrap: anywhere;
 }
 .overlay-state button,
@@ -212,9 +204,7 @@ a:focus-visible {
   border: 1px solid var(--rule);
   color: var(--bone);
   background: var(--raised);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .overlay-state.error strong {
   color: #d17b6d;
@@ -255,9 +245,7 @@ a:focus-visible {
   height: 30px;
   place-items: center;
   color: var(--bone);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
 }
 .brand-sigil::before {
@@ -281,10 +269,11 @@ a:focus-visible {
 }
 .brand-lockup span:last-child {
   color: var(--faint);
-  font:
-    400 8px/1.3 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.3 var(--font-ui);
   letter-spacing: 0.11em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .command-selects {
   display: flex;
@@ -301,9 +290,7 @@ a:focus-visible {
 }
 .command-field > span {
   color: var(--faint);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.14em;
 }
 .command-field select {
@@ -314,7 +301,7 @@ a:focus-visible {
   color: var(--bone);
   background: transparent;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   outline: 0;
 }
 .command-field select option {
@@ -335,9 +322,7 @@ a:focus-visible {
   gap: 7px;
   margin-right: 7px;
   color: #9a7b6d;
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
   white-space: nowrap;
 }
@@ -365,9 +350,7 @@ a:focus-visible {
 }
 .command-button {
   padding: 0 10px;
-  font:
-    500 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.06em;
 }
 .icon-command {
@@ -404,17 +387,16 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 12px;
   color: var(--muted);
-  font:
-    500 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.12em;
 }
 .telemetry-heading b {
   color: var(--pmc);
-  font-size: 8px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
 }
 .telemetry-heading b.stale {
   color: var(--scav);
@@ -431,16 +413,12 @@ a:focus-visible {
 }
 .coordinate-stack span {
   color: var(--faint);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.1em;
 }
 .coordinate-stack strong {
   color: var(--bone);
-  font:
-    500 18px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 18px/1 var(--font-ui);
   letter-spacing: -0.04em;
 }
 .telemetry-list {
@@ -458,18 +436,14 @@ a:focus-visible {
 }
 .telemetry-list dt {
   color: var(--faint);
-  font:
-    500 8px/1.2 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.2 var(--font-ui);
   letter-spacing: 0.09em;
 }
 .telemetry-list dd {
   overflow: hidden;
   margin: 0;
   color: #bfc0b8;
-  font:
-    400 10px/1.2 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.2 var(--font-ui);
   text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -479,9 +453,7 @@ a:focus-visible {
   padding: 0;
   color: var(--muted);
   background: transparent;
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
   text-align: left;
   text-decoration: underline;
@@ -532,16 +504,14 @@ a:focus-visible {
   background: var(--pmc);
 }
 .awaiting-fix strong {
-  font:
-    500 10px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
 }
 .awaiting-fix p {
   max-width: 200px;
   margin: 8px 0 0;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.45;
 }
 .panel-rule {
@@ -564,15 +534,11 @@ a:focus-visible {
   border-left: 1px solid var(--rule);
 }
 .intel-summary strong {
-  font:
-    500 18px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 18px/1 var(--font-ui);
 }
 .intel-summary span {
   color: var(--faint);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
 }
 .panel-button {
@@ -586,9 +552,7 @@ a:focus-visible {
   border: 1px solid #51574f;
   color: var(--bone);
   background: var(--raised);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
 }
 .panel-button:hover {
@@ -622,28 +586,24 @@ a:focus-visible {
 .panel-status span,
 .panel-status b {
   color: var(--faint);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.06em;
 }
 .panel-status b {
   color: var(--muted);
-  font-weight: 400;
+  font-weight: 600;
 }
 .telemetry-panel footer {
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin-top: 18px;
-  color: #4f534e;
-  font:
-    400 7px/1.3 "IBM Plex Mono",
-    monospace;
+  color: var(--muted);
+  font: 600 12px/1.3 var(--font-ui);
   text-align: center;
 }
 .telemetry-panel footer a {
-  color: #737970;
+  color: var(--muted);
 }
 
 .map-region {
@@ -659,7 +619,7 @@ a:focus-visible {
   background: #0c0f0d;
 }
 .leaflet-container {
-  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-family: var(--font-ui);
 }
 .tarkov-svg-layer,
 .tarkov-raster-layer {
@@ -689,9 +649,7 @@ a:focus-visible {
 .map-title-plate span,
 .map-title-plate small {
   color: var(--faint);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.1em;
 }
 .map-title-plate strong {
@@ -714,9 +672,7 @@ a:focus-visible {
   background: #111411f5;
   box-shadow: 0 8px 24px #0008;
   color: var(--muted);
-  font:
-    500 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .raid-map-banner b {
   color: var(--bone);
@@ -727,9 +683,7 @@ a:focus-visible {
   border: 1px solid var(--pmc);
   color: var(--pmc);
   background: transparent;
-  font:
-    600 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .map-asset-error {
   position: absolute;
@@ -749,13 +703,11 @@ a:focus-visible {
 }
 .map-asset-error strong {
   color: var(--danger);
-  font:
-    600 10px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .map-asset-error span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   overflow-wrap: anywhere;
 }
 .floating-follow {
@@ -771,9 +723,7 @@ a:focus-visible {
   border: 1px solid #687066;
   color: var(--bone);
   background: #151915f2;
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.07em;
   box-shadow: 0 8px 24px #0008;
 }
@@ -787,9 +737,7 @@ a:focus-visible {
   border-bottom-color: #3b403a !important;
   color: var(--bone) !important;
   background: #151915ed !important;
-  font:
-    400 18px/27px "IBM Plex Mono",
-    monospace !important;
+  font: 600 18px/27px var(--font-ui) !important;
 }
 .leaflet-bar a:hover {
   background: #242924 !important;
@@ -829,9 +777,7 @@ a:focus-visible {
   padding: 10px 0 9px;
   color: var(--muted);
   background: transparent;
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.06em;
 }
 .rail-button:hover,
@@ -865,14 +811,12 @@ a:focus-visible {
 .dialog h2 {
   margin: 3px 0 0;
   font-size: 19px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.02em;
 }
 .kicker {
   color: var(--faint);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.14em;
 }
 .bare-icon {
@@ -906,10 +850,10 @@ a:focus-visible {
   outline: 0;
   color: var(--bone);
   background: transparent;
-  font-size: 11px;
+  font-size: 12px;
 }
 .intel-search input::placeholder {
-  color: #5e635d;
+  color: var(--faint);
 }
 .search-results {
   margin: 0 12px 12px;
@@ -934,20 +878,18 @@ a:focus-visible {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  font-size: 11px;
+  font-size: 12px;
 }
 .search-results small {
   color: var(--faint);
-  font:
-    400 7px/1.3 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.3 var(--font-ui);
   text-transform: uppercase;
 }
 .search-results p {
   margin: 0;
   padding: 12px;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
 }
 .nearest-section {
   margin: 0 12px 14px;
@@ -964,12 +906,12 @@ a:focus-visible {
 .raid-intel strong {
   display: block;
   color: var(--bone);
-  font-size: 11px;
+  font-size: 12px;
 }
 .raid-intel p {
   margin: 5px 0 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.4;
 }
 .drawer-section-title {
@@ -978,15 +920,13 @@ a:focus-visible {
   justify-content: space-between;
   margin: 14px 0 7px;
   color: var(--muted);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 .drawer-section-title small {
   color: var(--faint);
-  font-size: 7px;
+  font-size: 12px;
 }
 .nearest-row {
   display: grid;
@@ -1005,30 +945,24 @@ a:focus-visible {
 }
 .nearest-row > b {
   color: var(--faint);
-  font:
-    400 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .nearest-row > span {
   display: flex;
   min-width: 0;
   flex-direction: column;
   overflow: hidden;
-  font-size: 11px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .nearest-row small {
   color: var(--faint);
-  font:
-    400 7px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
 }
 .nearest-row > strong {
   color: var(--pmc);
-  font:
-    500 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .legend-actions {
   display: grid;
@@ -1040,9 +974,7 @@ a:focus-visible {
   height: 29px;
   color: var(--muted);
   background: transparent;
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -1063,9 +995,7 @@ a:focus-visible {
 .legend-group h3 {
   margin: 0 0 6px;
   color: var(--faint);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -1077,7 +1007,7 @@ a:focus-visible {
   gap: 7px;
   min-height: 33px;
   padding: 2px 0;
-  color: #666b65;
+  color: var(--muted);
   background: transparent;
   text-align: left;
 }
@@ -1095,13 +1025,11 @@ a:focus-visible {
   border-color: currentColor;
 }
 .legend-row > span:nth-child(2) {
-  font-size: 11px;
+  font-size: 14px;
 }
 .legend-row > b {
   color: var(--faint);
-  font:
-    400 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .legend-row > i {
   position: relative;
@@ -1152,7 +1080,7 @@ a:focus-visible {
   align-items: center;
   gap: 6px;
   padding: 2px 0;
-  color: #555b55;
+  color: var(--muted);
   background: transparent;
   text-align: left;
 }
@@ -1173,13 +1101,11 @@ a:focus-visible {
 }
 .loot-filter > span:nth-child(2) {
   color: inherit;
-  font-size: 10px;
+  font-size: 13px;
 }
 .loot-filter > b {
   color: var(--faint);
-  font:
-    400 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .loot-filter > i {
   width: 7px;
@@ -1239,7 +1165,7 @@ a:focus-visible {
 .intel-note {
   margin: 12px;
   color: var(--faint);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.45;
 }
 .drawer-message.error {
@@ -1248,9 +1174,7 @@ a:focus-visible {
 .intel-note {
   padding-top: 10px;
   border-top: 1px solid var(--rule-soft);
-  font:
-    400 8px/1.5 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.5 var(--font-ui);
 }
 
 .extract-pmc {
@@ -1311,9 +1235,7 @@ a:focus-visible {
   border: 1px solid var(--rule);
   color: var(--muted);
   background: #0d100eee;
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .spawn-sniper {
   color: #9c778c !important;
@@ -1375,7 +1297,7 @@ a:focus-visible {
   color: var(--bone);
   background: #101310e8;
   font:
-    500 9px/1.1 "IBM Plex Sans Condensed",
+    600 12px/1.1 "IBM Plex Sans Condensed",
     sans-serif;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1391,7 +1313,7 @@ a:focus-visible {
   border-radius: 0 !important;
   color: var(--bone) !important;
   background: #121512f5 !important;
-  font-size: 10px !important;
+  font-size: 12px !important;
   box-shadow: 0 5px 16px #0009 !important;
 }
 .poi-tooltip::before {
@@ -1409,9 +1331,7 @@ a:focus-visible {
   border: 1px solid currentColor;
   color: var(--muted);
   background: #151815ed;
-  font:
-    500 10px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   box-shadow: 0 3px 10px #000a;
 }
 .poi-outline {
@@ -1438,9 +1358,7 @@ a:focus-visible {
 }
 .poi-popup-kicker {
   color: var(--faint);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -1451,9 +1369,7 @@ a:focus-visible {
 }
 .poi-popup-content small {
   color: var(--muted);
-  font:
-    400 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .poi-popup-content button {
   margin-top: 9px;
@@ -1461,7 +1377,7 @@ a:focus-visible {
   border: 1px solid var(--rule);
   color: var(--bone);
   background: var(--raised);
-  font-size: 10px;
+  font-size: 12px;
   text-align: left;
 }
 
@@ -1510,9 +1426,7 @@ a:focus-visible {
   border: 1px solid color-mix(in srgb, currentColor 65%, transparent);
   color: currentColor;
   background: #0b0d0be8;
-  font:
-    600 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1587,9 +1501,7 @@ a:focus-visible {
 .dialog h3 {
   margin: 0 0 7px;
   color: var(--muted);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.12em;
 }
 .dialog p {
@@ -1619,17 +1531,13 @@ a:focus-visible {
 .folder-row b,
 .folder-row strong {
   color: var(--bone);
-  font:
-    500 8px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
   letter-spacing: 0.06em;
 }
 .folder-row small {
   overflow: hidden;
   color: var(--faint);
-  font:
-    400 9px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1644,22 +1552,18 @@ a:focus-visible {
 .resolved-folder span,
 .resolved-folder code {
   overflow: hidden;
-  font:
-    400 8px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .resolved-folder span {
   color: var(--muted);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.08em;
 }
 .rescan-result {
   margin: 7px 0 !important;
-  font:
-    500 8px/1.4 "IBM Plex Mono",
-    monospace !important;
+  font: 600 12px/1.4 var(--font-ui) !important;
   letter-spacing: 0.04em;
 }
 .rescan-result.success {
@@ -1670,9 +1574,7 @@ a:focus-visible {
 }
 .field-help {
   color: var(--faint) !important;
-  font:
-    400 9px/1.5 "IBM Plex Mono",
-    monospace !important;
+  font: 600 12px/1.5 var(--font-ui) !important;
 }
 .dialog-button {
   height: 34px;
@@ -1680,9 +1582,7 @@ a:focus-visible {
   border: 1px solid var(--rule);
   color: var(--bone);
   background: var(--raised);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.07em;
 }
 .dialog-button.secondary {
@@ -1705,7 +1605,7 @@ a:focus-visible {
 .switch-row small {
   margin-top: 3px;
   color: var(--faint);
-  font-size: 10px;
+  font-size: 12px;
 }
 .switch-row input {
   width: 36px;
@@ -1736,7 +1636,7 @@ a:focus-visible {
 .range-row small {
   margin-top: 3px;
   color: var(--faint);
-  font-size: 10px;
+  font-size: 12px;
 }
 .range-row input {
   width: 100%;
@@ -1744,9 +1644,7 @@ a:focus-visible {
 }
 .range-row output {
   color: var(--muted);
-  font:
-    500 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   text-align: right;
 }
 
@@ -1763,9 +1661,7 @@ a:focus-visible {
 }
 .diagnostic-status {
   margin: 13px 0 0 !important;
-  font:
-    400 9px/1.4 "IBM Plex Mono",
-    monospace !important;
+  font: 600 12px/1.4 var(--font-ui) !important;
 }
 .diagnostic-status.success {
   color: var(--pmc);
@@ -1804,9 +1700,7 @@ a:focus-visible {
 }
 .text-field span {
   color: var(--faint);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.1em;
 }
 .text-field input {
@@ -1840,9 +1734,7 @@ a:focus-visible {
 }
 .share-state {
   color: var(--muted);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.1em;
 }
 .share-state.online {
@@ -1858,9 +1750,7 @@ a:focus-visible {
 }
 .share-actions > span {
   color: var(--faint);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   text-align: center;
   letter-spacing: 0.12em;
 }
@@ -1868,9 +1758,7 @@ a:focus-visible {
   padding: 12px 18px;
   border-top: 1px solid var(--rule);
   color: var(--faint);
-  font:
-    400 8px/1.5 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.5 var(--font-ui);
   letter-spacing: 0.04em;
 }
 .dialog-button:disabled {
@@ -1900,9 +1788,7 @@ a:focus-visible {
 }
 .quest-filter span {
   color: var(--faint);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.1em;
 }
 .quest-filter select {
@@ -1911,9 +1797,7 @@ a:focus-visible {
   border: 1px solid var(--rule);
   color: var(--bone);
   background: var(--raised);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .quest-result-bar {
   display: flex;
@@ -1921,9 +1805,7 @@ a:focus-visible {
   padding: 7px 16px;
   border-bottom: 1px solid var(--rule-soft);
   color: var(--faint);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
 }
 .quest-result-bar b {
@@ -1936,9 +1818,7 @@ a:focus-visible {
   padding: 9px 16px;
   border-bottom: 1px solid var(--rule-soft);
   color: var(--muted);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .quest-profile-bar label {
   display: flex;
@@ -1966,9 +1846,7 @@ a:focus-visible {
   padding: 0 8px;
   color: var(--bone);
   background: var(--raised);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .quest-profile-bar input {
   width: 92px;
@@ -1979,7 +1857,7 @@ a:focus-visible {
   border: 1px solid #665d38;
   color: #c9bb82;
   background: #18160f;
-  font-size: 10px;
+  font-size: 12px;
 }
 .quest-review-dialog {
   width: min(680px, calc(100vw - 32px));
@@ -2005,7 +1883,7 @@ a:focus-visible {
 }
 .quest-review-body > p {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.55;
 }
 .quest-experimental-notice {
@@ -2016,15 +1894,13 @@ a:focus-visible {
   background: #1a170d;
 }
 .quest-experimental-notice strong {
-  font:
-    600 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.08em;
 }
 .quest-experimental-notice p {
   margin: 6px 0 0;
   color: #c8bd98;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.45;
 }
 .quest-experimental-notice--panel {
@@ -2047,9 +1923,7 @@ a:focus-visible {
   border: 1px solid var(--rule);
   padding: 8px 10px;
   color: var(--muted);
-  font:
-    500 8px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
 }
 .quest-review-body article {
   display: grid;
@@ -2070,13 +1944,11 @@ a:focus-visible {
   padding: 8px 10px;
   color: #d2ad70;
   background: #19130d;
-  font-size: 10px;
+  font-size: 12px;
 }
 .quest-review-warning a {
   color: #e0c37d;
-  font:
-    600 8px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
   letter-spacing: 0.05em;
 }
 .segmented {
@@ -2088,9 +1960,7 @@ a:focus-visible {
   min-width: 56px;
   color: var(--muted);
   background: transparent;
-  font:
-    500 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .segmented button + button {
   border-left: 1px solid var(--rule);
@@ -2104,9 +1974,7 @@ a:focus-visible {
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font:
-    500 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   white-space: nowrap;
 }
 .compact-check input {
@@ -2159,9 +2027,7 @@ a:focus-visible {
 }
 .quest-expand span {
   color: var(--faint);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .quest-expand strong {
   font-size: 13px;
@@ -2169,7 +2035,7 @@ a:focus-visible {
 .quest-expand small {
   max-width: 700px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -2179,9 +2045,7 @@ a:focus-visible {
   padding: 6px 8px;
   color: var(--bone);
   background: var(--raised);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .quest-map-tags {
   display: flex;
@@ -2195,10 +2059,7 @@ a:focus-visible {
   border: 1px solid var(--rule);
   color: var(--muted);
   background: transparent;
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
-  text-transform: uppercase;
+  font: 600 12px/1 var(--font-ui);
 }
 .quest-map-tags button.active {
   border-color: #666f62;
@@ -2207,18 +2068,14 @@ a:focus-visible {
 .quest-map-tags i {
   margin-left: auto;
   color: var(--faint);
-  font:
-    normal 500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: normal 600 12px/1 var(--font-ui);
 }
 .quest-map-tags em {
   margin-left: auto;
   padding: 3px 5px;
   border: 1px solid var(--rule);
   color: var(--muted);
-  font:
-    normal 500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: normal 600 12px/1 var(--font-ui);
 }
 .quest-map-tags em + i {
   margin-left: 0;
@@ -2237,15 +2094,13 @@ a:focus-visible {
 .quest-details h4 {
   margin: 0 0 8px;
   color: var(--faint);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.1em;
 }
 .quest-details p {
   margin: 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 .quest-objective-row {
   display: flex;
@@ -2255,7 +2110,7 @@ a:focus-visible {
   padding: 9px 0;
   border-top: 1px solid var(--rule-soft);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 .quest-objective-row:first-of-type {
   border-top: 0;
@@ -2269,14 +2124,12 @@ a:focus-visible {
 .quest-objective-row > div:first-child b {
   grid-row: 1 / span 3;
   color: var(--faint);
-  font:
-    500 8px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
 }
 .quest-objective-row small {
   grid-column: 2;
   color: var(--faint);
-  font-size: 9px;
+  font-size: 12px;
 }
 .quest-objective-actions {
   flex: 0 0 auto;
@@ -2290,9 +2143,7 @@ a:focus-visible {
   border: 1px solid var(--rule);
   color: var(--bone);
   background: var(--raised);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .quest-rewards {
   display: flex;
@@ -2303,15 +2154,13 @@ a:focus-visible {
   padding: 5px 7px;
   border: 1px solid var(--rule);
   color: var(--muted);
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .quest-card > p {
   margin: 0;
   padding: 0 11px 10px;
   color: var(--faint);
-  font-size: 10px;
+  font-size: 12px;
 }
 @media (min-width: 800px) {
   .quest-toolbar .quest-filter {
@@ -2345,9 +2194,7 @@ a:focus-visible {
 }
 .license-links a {
   color: #a8ae9e;
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 
 .empty-state {
@@ -2438,7 +2285,7 @@ a:focus-visible {
   background: #101310f5;
   box-shadow: 0 2px 5px #0009;
   font:
-    500 12px/1.25 "IBM Plex Sans Condensed",
+    600 12px/1.25 "IBM Plex Sans Condensed",
     sans-serif;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -2462,9 +2309,7 @@ a:focus-visible {
   background: #101310;
   border: 1px solid var(--muted);
   text-align: center;
-  font:
-    600 11px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   pointer-events: none;
 }
 .extraction-overflow {
@@ -2615,4 +2460,125 @@ a:focus-visible {
 }
 .overlay-shell .quest-artwork img {
   height: 140px;
+}
+
+.language-select {
+  flex: 0 0 auto;
+}
+.language-select select {
+  padding: 6px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--panel);
+  font-size: 12px;
+}
+.overlay-bar .language-select {
+  align-self: center;
+  margin-right: 4px;
+}
+.overlay-bar .language-select select {
+  max-width: 92px;
+  padding: 4px;
+  font-size: 12px;
+}
+.companion-controls .language-select {
+  justify-content: center;
+}
+.companion-gate .language-select {
+  display: block;
+  margin-bottom: 16px;
+}
+html:lang(zh-CN) .kicker,
+html:lang(zh-CN) .command-field,
+html:lang(zh-CN) .telemetry-heading {
+  letter-spacing: 0.02em;
+}
+
+html:lang(zh-CN) .brand-lockup span:last-child,
+html:lang(zh-CN) .command-field > span,
+html:lang(zh-CN) .system-chip,
+html:lang(zh-CN) .telemetry-heading,
+html:lang(zh-CN) .telemetry-heading b,
+html:lang(zh-CN) .telemetry-list dt,
+html:lang(zh-CN) .intel-summary span,
+html:lang(zh-CN) .panel-status span,
+html:lang(zh-CN) .panel-status b,
+html:lang(zh-CN) .telemetry-panel footer,
+html:lang(zh-CN) .map-title-plate span,
+html:lang(zh-CN) .map-title-plate small,
+html:lang(zh-CN) .kicker,
+html:lang(zh-CN) .legend-group h3,
+html:lang(zh-CN) .overlay-bar b {
+  font-size: 12px;
+}
+
+html:lang(zh-CN) .panel-button,
+html:lang(zh-CN) .command-button,
+html:lang(zh-CN) .intel-note {
+  font-size: 14px;
+}
+
+.command-button,
+.panel-button,
+.dialog-button,
+.legend-actions button,
+.command-field select,
+.intel-search input,
+.search-results button > span,
+.nearest-row > span,
+.awaiting-fix strong,
+.raid-intel strong,
+.switch-row b,
+.range-row b {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.awaiting-fix p,
+.raid-intel p,
+.dialog-section p,
+.dialog-section > .field-help,
+.dialog-section > .rescan-result,
+.switch-row small,
+.range-row small {
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.drawer-header h2,
+.dialog h2,
+.quest-expand strong {
+  font-weight: 700;
+}
+
+.extraction-label,
+.extraction-overflow button,
+.poi-marker-label,
+.poi-popup-content,
+.poi-tooltip {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (max-width: 1120px) {
+  .command-selects {
+    min-width: 260px;
+  }
+  .command-field {
+    width: 130px;
+  }
+  .command-bar .brand-lockup {
+    width: 180px;
+    flex-basis: 180px;
+  }
+  .command-actions {
+    gap: 4px;
+    padding: 0 8px;
+  }
+  .command-button {
+    gap: 5px;
+    padding: 0 7px;
+    font-size: 13px;
+  }
 }
