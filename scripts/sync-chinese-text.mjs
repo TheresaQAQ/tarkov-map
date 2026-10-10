@@ -5,7 +5,7 @@ import { gameTextSchema } from "../src/locales/game-text-schema.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const destination = path.join(root, "src/locales/tarkov-zh-CN.json");
-const checksumPath = path.join(root, "src/locales/tarkov-zh-CN.sha256");
+const checksumPath = path.join(root, "src/locales/tarkov-text-checksums.json");
 const maxBytes = 8 * 1024 * 1024;
 const endpoints = [
   "regular/maps",
@@ -108,5 +108,5 @@ const output = `${JSON.stringify(
 )}\n`;
 const hash = createHash("sha256").update(output).digest("hex");
 await writeFile(destination, output);
-await writeFile(checksumPath, `${hash}  src/locales/tarkov-zh-CN.json\n`);
+await writeFile(checksumPath, `${JSON.stringify({ "tarkov-zh-CN.json": hash }, null, 2)}\n`);
 console.log(`Saved ${uniqueEntries.length} source-keyed English/Chinese pairs; SHA-256 ${hash}`);

@@ -9,7 +9,7 @@ import type { MapPoi } from "../types";
 describe("bundled Chinese game text", () => {
   it("matches its recorded SHA-256 identity", () => {
     const bytes = readFileSync("src/locales/tarkov-zh-CN.json");
-    const expected = readFileSync("src/locales/tarkov-zh-CN.sha256", "utf8").split(/\s+/)[0];
+    const expected = JSON.parse(readFileSync("src/locales/tarkov-text-checksums.json", "utf8"))["tarkov-zh-CN.json"];
     expect(createHash("sha256").update(bytes).digest("hex")).toBe(expected);
   });
 

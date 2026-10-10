@@ -9,7 +9,7 @@
 - 物品：[英文](https://json.tarkov.dev/regular/items_en)、[中文](https://json.tarkov.dev/regular/items_zh)。
 - 任务：[英文](https://json.tarkov.dev/regular/tasks_en)、[中文](https://json.tarkov.dev/regular/tasks_zh)。PvE 和赛季模式也保留各自的数据来源。
 
-源代码里的 `src/locales/tarkov-zh-CN.json` 是实际使用的完整对照文件。每条 `entries` 记录包含 `key`、`en`、`zh` 和 `source`；`source` 指向 `sources` 数组中的中英文原始地址和各自的 SHA-256。文件自身的哈希记录在相邻的 `.sha256` 文件中。
+源代码里的 `src/locales/tarkov-zh-CN.json` 是实际使用的完整对照文件。每条 `entries` 记录包含 `key`、`en`、`zh` 和 `source`；`source` 指向 `sources` 数组中的中英文原始地址和各自的 SHA-256。文件自身的哈希记录在相邻的 `tarkov-text-checksums.json` 文件中。
 
 ## 已核对的例子
 

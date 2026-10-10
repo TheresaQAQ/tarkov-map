@@ -10,7 +10,13 @@ protected `vMAJOR.MINOR.PATCH` tag whose version matches both package manifests.
    pass.
 5. Verify the GitHub Release contains the installer, checksum, release manifest,
    SPDX SBOM, and provenance attestation.
-6. Install and launch the downloaded artifact on a clean Windows environment.
+6. Review the complete draft and its assets, then publish it. The workflow creates
+   a draft so immutable releases cannot become public before every asset is ready.
+7. Install and launch the downloaded artifact on a clean Windows environment.
+
+The manifest uses the current GitHub repository as its download origin. The
+localized fork keeps upstream attribution and labels its release as the Chinese
+edition; it does not replace an upstream release asset.
 
 Do not upload a locally built replacement to an existing release. If an artifact
 is wrong, publish a new patch version.

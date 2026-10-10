@@ -2,6 +2,9 @@
 
 [简体中文说明](README.zh-CN.md)
 
+[Windows 中文版下载](https://github.com/TheresaQAQ/tarkov-map/releases/latest) ·
+[原项目](https://github.com/QTtrash/tarkov-map)
+
 Local-first Escape from Tarkov map intelligence and end-to-end encrypted squad
 position sharing for Windows.
 

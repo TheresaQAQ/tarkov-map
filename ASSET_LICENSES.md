@@ -42,7 +42,7 @@ source terms and is not covered by the application's Apache-2.0 code license.
 
 The initial SHA-256 is
 `dab0c37240b79a006714422f1fba139eb531690c080695184bf39fb4d4c1d9c0`.
-`src/locales/tarkov-zh-CN.sha256` is the authoritative identity for subsequent
+`src/locales/tarkov-text-checksums.json` is the authoritative identity for subsequent
 language-only updates. Tests verify the identity, provenance validation,
 disambiguation, verbatim names, and English fallback. `scripts/sync-chinese-text.mjs` fetches bounded
 JSON from the two allowlisted source hosts and filters against retained text/IDs; it does

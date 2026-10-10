@@ -60,7 +60,7 @@ jobs:
           $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $target).Hash.ToLowerInvariant()
           $size = (Get-Item -LiteralPath $target).Length
           "$hash  Raid-Signal-Setup-$version.exe" | Set-Content -NoNewline "release/Raid-Signal-Setup-$version.exe.sha256"
-          $downloadUrl = "https://github.com/QTtrash/tarkov-map/releases/download/v$version/Raid-Signal-Setup-$version.exe"
+          $downloadUrl = "https://github.com/${{ github.repository }}/releases/download/v$version/Raid-Signal-Setup-$version.exe"
           @{ version=$version; filename="Raid-Signal-Setup-$version.exe"; downloadUrl=$downloadUrl; sha256=$hash; size=$size; publishedAt=(Get-Date).ToUniversalTime().ToString('o') } |
             ConvertTo-Json | Set-Content release/release.json
       - uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
@@ -114,4 +114,4 @@ jobs:
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${{ github.ref_name }}" release/* --verify-tag --generate-notes --notes-file .github/RELEASE_NOTES.md --title "Raid Signal ${{ github.ref_name }}"
+        run: gh release create "${{ github.ref_name }}" release/* --draft --verify-tag --notes-file .github/RELEASE_NOTES.md --title "Raid Signal ${{ github.ref_name }} 中文版"

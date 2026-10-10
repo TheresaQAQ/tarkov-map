@@ -4,6 +4,8 @@ Raid Signal 是面向 Windows 的《逃离塔科夫》地图与任务导航工�
 
 原仓库：[QTtrash/tarkov-map](https://github.com/QTtrash/tarkov-map)。[English README](README.md)。
 
+[下载 Windows 中文版安装包](https://github.com/TheresaQAQ/tarkov-map/releases/latest)。这是本仓库维护的汉化发行版；原项目与各资源作者的署名及许可证保持不变。
+
 ## 语言切换
 
 首次打开默认使用简体中文。桌面窗口顶部、设置页面、地图浮窗和手机端均提供语言选择，可随时切换为 English。
