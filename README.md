@@ -8,11 +8,11 @@
 Local-first Escape from Tarkov map intelligence and end-to-end encrypted squad
 position sharing for Windows.
 
-[![Release](https://img.shields.io/github/v/release/QTtrash/tarkov-map?display_name=tag&sort=semver)](https://github.com/QTtrash/tarkov-map/releases/latest)
-[![CI](https://github.com/QTtrash/tarkov-map/actions/workflows/ci.yml/badge.svg)](https://github.com/QTtrash/tarkov-map/actions/workflows/ci.yml)
-[![Security](https://github.com/QTtrash/tarkov-map/actions/workflows/security.yml/badge.svg)](https://github.com/QTtrash/tarkov-map/actions/workflows/security.yml)
+[![Release](https://img.shields.io/github/v/release/TheresaQAQ/tarkov-map?display_name=tag&sort=semver)](https://github.com/TheresaQAQ/tarkov-map/releases/latest)
+[![CI](https://github.com/TheresaQAQ/tarkov-map/actions/workflows/ci.yml/badge.svg)](https://github.com/TheresaQAQ/tarkov-map/actions/workflows/ci.yml)
+[![Security](https://github.com/TheresaQAQ/tarkov-map/actions/workflows/security.yml/badge.svg)](https://github.com/TheresaQAQ/tarkov-map/actions/workflows/security.yml)
 [![License](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows-0078D4.svg)](https://github.com/QTtrash/tarkov-map/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows-0078D4.svg)](https://github.com/TheresaQAQ/tarkov-map/releases)
 
 ![Raid Signal — local-first, encrypted, and open source](public/images/raid-signal-open-source.png)
 
@@ -48,7 +48,7 @@ game files. No official approval or anti-cheat guarantee is implied.
 ## Install and verify
 
 Download the Windows installer and SHA-256 file from the immutable
-[v1.4.1 release](https://github.com/QTtrash/tarkov-map/releases/tag/v1.4.1).
+[v1.4.1 release](https://github.com/TheresaQAQ/tarkov-map/releases/tag/v1.4.1).
 Installers are unsigned initially, so Windows may display an unknown-publisher
 warning. Do not download installers from repository commits or third-party mirrors.
 
@@ -63,11 +63,11 @@ if ($actual -ne $expected) { throw "Raid Signal checksum mismatch" }
 With the GitHub CLI installed, verify that GitHub Actions produced the artifact:
 
 ```text
-gh attestation verify Raid-Signal-Setup-1.4.1.exe -R QTtrash/tarkov-map
+gh attestation verify Raid-Signal-Setup-1.4.1.exe -R TheresaQAQ/tarkov-map
 ```
 
 The release also contains `release.json` and an SPDX SBOM. The
-[release workflow history](https://github.com/QTtrash/tarkov-map/actions/workflows/release.yml)
+[release workflow history](https://github.com/TheresaQAQ/tarkov-map/actions/workflows/release.yml)
 records the successful build, Microsoft Defender scan, independent ClamAV scan,
 and publication gate. These controls provide traceable release evidence; they
 are not a third-party security audit or anti-cheat approval.
