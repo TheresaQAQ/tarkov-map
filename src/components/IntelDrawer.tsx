@@ -1,3 +1,5 @@
+import { categoryLabel, localizeMessage, t, g, poiName, chinesePoiName } from "../i18n";
+import { useLanguage } from "../use-language";
 import { useMemo, useState } from "react";
 import {
   countLootGroups,
@@ -51,8 +53,16 @@ export function IntelDrawer({
   onSetVisible,
   onFocusPoi,
 }: IntelDrawerProps) {
+  const language = useLanguage();
   const [query, setQuery] = useState("");
-  const results = useMemo(() => searchPois(bundle?.pois ?? [], query), [bundle, query]);
+  const results = useMemo(
+    () =>
+      searchPois(
+        (bundle?.pois ?? []).map((poi) => ({ ...poi, aliases: [...(poi.aliases ?? []), chinesePoiName(poi)] })),
+        query,
+      ),
+    [bundle, language, query],
+  );
   const lootCounts = useMemo(() => countLootGroups(bundle?.pois ?? []), [bundle]);
   const nearest = useMemo(
     () =>
@@ -68,16 +78,16 @@ export function IntelDrawer({
   );
 
   return (
-    <aside className={open ? "intel-shell open" : "intel-shell"} aria-label="Map intelligence">
-      <nav className="intel-rail" aria-label="Map tools">
+    <aside className={open ? "intel-shell open" : "intel-shell"} aria-label={t("Map intelligence")}>
+      <nav className="intel-rail" aria-label={t("Map tools")}>
         <button
           className={open ? "rail-button active" : "rail-button"}
           onClick={() => onOpenChange(!open)}
-          aria-label={open ? "Close map legend" : "Open map legend"}
-          title="Map intelligence"
+          aria-label={open ? t("Close map legend") : t("Open map legend")}
+          title={t("Map intelligence")}
         >
           <UiIcon name="layers" />
-          <span>Intel</span>
+          <span>{t("Intel")}</span>
         </button>
       </nav>
 
@@ -85,10 +95,10 @@ export function IntelDrawer({
         <div className="intel-drawer">
           <header className="drawer-header">
             <div>
-              <span className="kicker">MAP INTELLIGENCE</span>
-              <h2>Legend</h2>
+              <span className="kicker">{t("MAP INTELLIGENCE")}</span>
+              <h2>{t("Legend")}</h2>
             </div>
-            <button className="bare-icon" onClick={() => onOpenChange(false)} aria-label="Close map legend">
+            <button className="bare-icon" onClick={() => onOpenChange(false)} aria-label={t("Close map legend")}>
               <UiIcon name="close" />
             </button>
           </header>
@@ -98,24 +108,24 @@ export function IntelDrawer({
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Find an extract or location"
+              placeholder={t("Find an extract or location")}
             />
           </label>
 
           {query.trim() && (
-            <section className="search-results" aria-label="Search results">
+            <section className="search-results" aria-label={t("Search results")}>
               {results.length ? (
                 results.map((poi) => (
                   <button key={poi.id} onClick={() => onFocusPoi(poi.id)}>
                     <PoiGlyph category={poi.category} size={15} />
                     <span>
-                      {poi.name}
-                      <small>{poi.category.replaceAll("-", " ")}</small>
+                      {poiName(poi)}
+                      <small>{categoryLabel(poi.category)}</small>
                     </span>
                   </button>
                 ))
               ) : (
-                <p>No matching map locations</p>
+                <p>{t("No matching map locations")}</p>
               )}
             </section>
           )}
@@ -124,15 +134,17 @@ export function IntelDrawer({
             <section className="nearest-section">
               <div className="drawer-section-title">
                 <span>
-                  {raidExtracts?.status === "recognized" ? "Nearest active extracts" : "Nearest possible extracts"}
+                  {raidExtracts?.status === "recognized"
+                    ? t("Nearest active extracts")
+                    : t("Nearest possible extracts")}
                 </span>
-                <small>Direct distance</small>
+                <small>{t("Direct distance")}</small>
               </div>
               {nearest.map(({ poi, distance }, index) => (
                 <button className="nearest-row" key={poi.id} onClick={() => onFocusPoi(poi.id)}>
                   <b>{String(index + 1).padStart(2, "0")}</b>
                   <span>
-                    {poi.name}
+                    {poiName(poi)}
                     <small>{poi.category.replace("extract-", "").toUpperCase()}</small>
                   </span>
                   <strong>{Math.round(distance)} m</strong>
@@ -147,30 +159,32 @@ export function IntelDrawer({
               aria-live="polite"
             >
               <div className="drawer-section-title">
-                <span>Raid availability</span>
+                <span>{t("Raid availability")}</span>
                 <small>
                   {raidExtracts?.status === "recognized"
-                    ? `${Math.round(raidExtracts.confidence * 100)}% confidence`
-                    : "Unknown"}
+                    ? t("{count}% confidence", { count: Math.round(raidExtracts.confidence * 100) })
+                    : t("Unknown")}
                 </small>
               </div>
               {raidExtracts?.status === "recognized" ? (
                 <>
-                  <strong>{raidExtracts.message}</strong>
-                  <p>{raidExtracts.recognizedNames.join(" · ")}</p>
+                  <strong>
+                    {t("{count} active raid options recognized", { count: raidExtracts.activeExtractIds.length })}
+                  </strong>
+                  <p>{raidExtracts.recognizedNames.map((name) => g(name)).join(" · ")}</p>
                 </>
               ) : (
                 <>
-                  <strong>Active exits not confirmed</strong>
-                  <p>Press O in raid, keep the extraction panel visible, then take a screenshot.</p>
+                  <strong>{t("Active exits not confirmed")}</strong>
+                  <p>{t("Press O in raid, keep the extraction panel visible, then take a screenshot.")}</p>
                 </>
               )}
             </section>
           )}
 
           <div className="legend-actions">
-            <button onClick={() => onSetVisible(defaultVisiblePoiCategories)}>Recommended</button>
-            <button onClick={onHideAll}>Hide all</button>
+            <button onClick={() => onSetVisible(defaultVisiblePoiCategories)}>{t("Recommended")}</button>
+            <button onClick={onHideAll}>{t("Hide all")}</button>
           </div>
 
           <div className="legend-groups">
@@ -179,7 +193,7 @@ export function IntelDrawer({
               if (!available.length && group.id !== "utility") return null;
               return (
                 <section className="legend-group" key={group.id}>
-                  <h3>{group.name}</h3>
+                  <h3>{t(group.name)}</h3>
                   {group.id === "utility" && (
                     <button
                       className={showQuestMarkers ? "legend-row quest-objective enabled" : "legend-row quest-objective"}
@@ -189,7 +203,7 @@ export function IntelDrawer({
                       <span className="legend-symbol">
                         <PoiGlyph category="quest-objective" />
                       </span>
-                      <span>Quest markers</span>
+                      <span>{t("Quest markers")}</span>
                       <b>{activeQuestCount}</b>
                       <i aria-hidden="true" />
                     </button>
@@ -209,12 +223,12 @@ export function IntelDrawer({
                         <span className="legend-symbol">
                           <PoiGlyph category={category.id} />
                         </span>
-                        <span>{category.name}</span>
+                        <span>{t(category.name)}</span>
                         <b>{definition.poiCounts[category.id]}</b>
                         <i aria-hidden="true" />
                       </button>
                       {category.id === "loot" && (
-                        <div className="loot-filter-grid" aria-label="Loot container categories">
+                        <div className="loot-filter-grid" aria-label={t("Loot container categories")}>
                           {lootGroupDefinitions.map((lootGroup) => {
                             const count = lootCounts.get(lootGroup.id) ?? 0;
                             if (!count) return null;
@@ -231,7 +245,7 @@ export function IntelDrawer({
                                 <span className="loot-filter-symbol">
                                   <LootGroupGlyph group={lootGroup.id} />
                                 </span>
-                                <span>{lootGroup.name}</span>
+                                <span>{t(lootGroup.name)}</span>
                                 <b>{count}</b>
                                 <i aria-hidden="true" />
                               </button>
@@ -246,13 +260,13 @@ export function IntelDrawer({
             })}
           </div>
 
-          {loading && <p className="drawer-message">Loading bundled map intelligence…</p>}
-          {error && <p className="drawer-message error">{error}</p>}
+          {loading && <p className="drawer-message">{t("Loading bundled map intelligence…")}</p>}
+          {error && <p className="drawer-message error">{localizeMessage(error)}</p>}
           {!loading && !error && bundle && bundle.pois.length === 0 && (
-            <p className="drawer-message">No intelligence is currently available for this map.</p>
+            <p className="drawer-message">{t("No intelligence is currently available for this map.")}</p>
           )}
           <footer className="intel-note">
-            Locations are possible static points. Raid availability is not guaranteed.
+            {t("Locations are possible static points. Raid availability is not guaranteed.")}
           </footer>
         </div>
       )}

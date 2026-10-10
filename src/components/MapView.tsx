@@ -1,3 +1,5 @@
+import { t, gm, poiName } from "../i18n";
+import { useLanguage } from "../use-language";
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet.markercluster";
@@ -78,6 +80,7 @@ export function MapView({
   onDeleteWaypoint,
   deletableWaypointIds,
 }: MapViewProps) {
+  const language = useLanguage();
   const [questDetail, setQuestDetail] = useState<QuestObjectivePoi | null>(null);
   const [squadNow, setSquadNow] = useState(() => Date.now());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -282,12 +285,12 @@ export function MapView({
         if (outline) outline.addTo(group);
         const marker = L.marker(worldPoint(poi.position), {
           icon: poiIcon(poi, selectedPoiRef.current === poi.id, activeExtractIds.has(poi.id)),
-          title: poi.name,
+          title: poiName(poi),
           riseOnHover: true,
           zIndexOffset: poi.kind === "extract" ? 300 : poi.kind === "transit" ? 250 : 100,
         });
         const tooltip = document.createElement("span");
-        tooltip.textContent = poi.name;
+        tooltip.textContent = poiName(poi);
         marker.bindTooltip(tooltip, { direction: "top", offset: [0, -12], className: "poi-tooltip" });
         if (poi.kind !== "quest-objective" && poi.kind !== "quest-possible-location")
           marker.bindPopup(
@@ -316,7 +319,7 @@ export function MapView({
       for (const [id, marker] of markers) {
         const element = marker.getElement();
         const poi = allPois.get(id);
-        element?.setAttribute("aria-label", poi?.name ?? "Map marker");
+        element?.setAttribute("aria-label", poi ? poiName(poi) : t("Map marker"));
         element?.setAttribute("data-poi-id", id);
         if (poi?.kind === "quest-objective" || poi?.kind === "quest-possible-location")
           element?.setAttribute("data-objective-id", poi.objectiveId);
@@ -333,6 +336,7 @@ export function MapView({
       poiOutlinesRef.current.clear();
     };
   }, [
+    language,
     activeExtractIds,
     activeFloor,
     definition,
@@ -352,13 +356,13 @@ export function MapView({
       const marker = poiMarkersRef.current.get(id);
       if (poi && marker) {
         marker.setIcon(poiIcon(poi, id === selectedPoiId, activeExtractIds.has(id)));
-        marker.getElement()?.setAttribute("aria-label", poi.name);
+        marker.getElement()?.setAttribute("aria-label", poiName(poi));
       }
       const outline = poiOutlinesRef.current.get(id);
       outline?.setStyle(id === selectedPoiId ? { opacity: 1, fillOpacity: 0.12 } : { opacity: 0, fillOpacity: 0 });
     }
     previousSelectedRef.current = selectedPoiId;
-  }, [activeExtractIds, poiBundle, selectedPoiId]);
+  }, [activeExtractIds, language, poiBundle, selectedPoiId]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -368,6 +372,7 @@ export function MapView({
       .map((poi) => ({ poi, marker: poiMarkersRef.current.get(poi.id)! }));
     return installExtractionLabels(map, extracts, activeExtractIds, selectedPoiId);
   }, [
+    language,
     activeExtractIds,
     activeFloor,
     definition,
@@ -485,9 +490,11 @@ export function MapView({
         ref={containerRef}
         role="application"
         tabIndex={0}
-        aria-label={`${definition.displayName} map`}
+        aria-label={t("{name} map", { name: gm(definition.displayName) })}
         aria-keyshortcuts={onCreateWaypoint ? "Enter" : undefined}
-        title={onCreateWaypoint ? "Use arrow keys to pan and Enter to create a waypoint at the map center" : undefined}
+        title={
+          onCreateWaypoint ? t("Use arrow keys to pan and Enter to create a waypoint at the map center") : undefined
+        }
         onKeyDown={(event) => {
           if (event.target !== event.currentTarget || event.key !== "Enter" || !onCreateWaypoint || !mapRef.current)
             return;

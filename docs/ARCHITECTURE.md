@@ -34,6 +34,16 @@ files. The Cloudflare Worker adapter is not a supported runtime.
 
 ## Ownership boundaries
 
+- `src/i18n.ts` owns presentation-only language selection and text lookup;
+  `src/use-language.ts` subscribes React surfaces to it. The validated local
+  preference defaults to Simplified Chinese and remains separate from settings
+  schema v2 and room protocol v1. Same-origin storage events synchronize open
+  surfaces. Application copy and game names use separate lookup functions.
+  Game names retain paired source locale keys, verbatim values, and provenance;
+  identity keys disambiguate equal English names, while unpaired text retains
+  English. Objective translations must match the snapshot's English before use.
+  Bundled Chinese text validates before use. Map/quest IDs, coordinates, OCR aliases,
+  persisted progress, and wire payloads retain the existing data snapshot.
 - `src/sharing/` owns protocol v1, invitation parsing, encryption, and decrypted
   payload validation.
 - `src/validation.ts` owns untrusted TypeScript runtime schemas.

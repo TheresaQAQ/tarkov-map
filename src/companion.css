@@ -30,9 +30,7 @@ body.companion-body {
   height: 29px;
   place-items: center;
   border: 1px solid var(--muted);
-  font:
-    600 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   transform: rotate(45deg);
 }
 .companion-brand > b::first-letter {
@@ -43,14 +41,12 @@ body.companion-body {
   flex-direction: column;
 }
 .companion-brand strong {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.1em;
 }
 .companion-brand small {
   color: var(--faint);
-  font:
-    400 7px/1.3 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.3 var(--font-ui);
   letter-spacing: 0.08em;
 }
 .companion-header button,
@@ -60,9 +56,7 @@ body.companion-body {
   border: 1px solid var(--rule);
   color: var(--muted);
   background: transparent;
-  font:
-    500 8px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.06em;
 }
 .companion-state {
@@ -70,9 +64,7 @@ body.companion-body {
   align-items: center;
   gap: 5px;
   color: var(--scav);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
 }
 .companion-state i {
   width: 5px;
@@ -97,9 +89,7 @@ body.companion-body {
   border: 1px solid var(--scav);
   color: var(--bone);
   background: color-mix(in srgb, var(--canvas) 94%, transparent);
-  font:
-    500 10px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
   transform: translateX(-50%);
 }
 .companion-controls {
@@ -118,11 +108,13 @@ body.companion-body {
   padding: 0 12px;
   border-right: 1px solid var(--rule);
 }
+.companion-controls .language-select {
+  min-width: 90px;
+  flex: 0 0 90px;
+}
 .companion-controls label span {
   color: var(--faint);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.12em;
 }
 .companion-controls select {
@@ -163,9 +155,7 @@ body.companion-body {
 .companion-roster > span {
   padding: 7px 9px;
   color: var(--faint);
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.12em;
 }
 .companion-roster button {
@@ -179,13 +169,11 @@ body.companion-body {
   text-align: left;
 }
 .companion-roster button b {
-  font-size: 10px;
+  font-size: 12px;
 }
 .companion-roster button small {
   color: var(--muted);
-  font:
-    400 8px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
 }
 .companion-gate {
   min-height: 100%;
@@ -233,9 +221,7 @@ body.companion-body {
   right: 18px;
   bottom: 15px;
   color: #6f685e;
-  font:
-    500 7px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.12em;
 }
 .companion-gate__field b {
@@ -243,9 +229,7 @@ body.companion-body {
   top: 15px;
   left: 18px;
   color: #ff5a2a;
-  font:
-    500 13px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 13px/1 var(--font-ui);
   letter-spacing: 0.15em;
 }
 .companion-gate section {
@@ -254,9 +238,7 @@ body.companion-body {
 .companion-gate section > p {
   margin: 0 0 18px;
   color: #ff5a2a;
-  font:
-    500 9px/1.4 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1.4 var(--font-ui);
   letter-spacing: 0.15em;
 }
 .companion-gate h1 {
@@ -278,9 +260,7 @@ body.companion-body {
   padding: 12px 16px;
   border: 1px solid #ff5a2a;
   color: #ff5a2a;
-  font:
-    500 9px/1 "IBM Plex Mono",
-    monospace;
+  font: 600 12px/1 var(--font-ui);
   letter-spacing: 0.1em;
   text-decoration: none;
 }
@@ -346,7 +326,7 @@ body.companion-body {
 .companion-header button,
 .companion-controls button {
   min-height: 44px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .companion-waypoint-controls {
   display: flex;
@@ -388,7 +368,7 @@ body.companion-body {
   .companion-controls button {
     margin: 0 4px;
     padding: 0 5px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .companion-body .quest-marker-dialog {
     width: calc(100vw - 12px);

@@ -1,4 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
+
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!localStorage.getItem("raid-signal-language")) localStorage.setItem("raid-signal-language", "en");
+  });
+});
 import { readFileSync } from "node:fs";
 const settings = JSON.parse(readFileSync("contracts/settings-v2.json", "utf8"));
 import type { CustomPinPoi, QuestBundle, QuestObjectivePoi } from "../../src/types";
@@ -80,7 +86,7 @@ test("quest-panel focus survives floors, map changes, and repeated requests", as
   await page.getByRole("button", { name: "QUEST NAVIGATOR" }).click();
   await page.getByPlaceholder("Search quests, traders, objectives").fill("Chumming");
   await page.locator(".quest-expand").first().click();
-  await page.getByRole("button", { name: /SHOW POINT.*CUSTOMS/ }).click();
+  await page.getByRole("button", { name: /SHOW POINT.*Customs/ }).click();
   const details = page.getByRole("dialog", { name: "Chumming" });
   await expect(details).toBeVisible();
   await expect(details.getByRole("region", { name: "Selected objective" })).toContainText("3rd floor");
@@ -98,7 +104,7 @@ test("quest-panel focus survives floors, map changes, and repeated requests", as
   await expect(details).toBeHidden();
   for (let attempt = 0; attempt < 2; attempt += 1) {
     await page.getByRole("button", { name: "QUEST NAVIGATOR" }).click();
-    await page.getByRole("button", { name: /SHOW POINT.*WOODS/ }).click();
+    await page.getByRole("button", { name: /SHOW POINT.*Woods/ }).click();
     await expect(details).toBeVisible();
     await expect(page.getByRole("application", { name: "Woods map" })).toBeVisible();
     await expect(details.getByRole("region", { name: "Selected objective" })).toContainText("sawmill on Woods");

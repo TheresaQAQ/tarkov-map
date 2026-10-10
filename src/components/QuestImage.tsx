@@ -1,8 +1,11 @@
+import { t, g } from "../i18n";
+import { useLanguage } from "../use-language";
 import { useEffect, useState } from "react";
 import { loadQuestImages } from "../quest-catalog";
 import type { QuestGameMode } from "../types";
 
 export function QuestImage({ taskId, mode, name }: { taskId: string; mode: QuestGameMode; name: string }) {
+  useLanguage();
   const [entry, setEntry] = useState<Awaited<ReturnType<typeof loadQuestImages>>["images"][number] | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "unavailable">("loading");
   useEffect(() => {
@@ -29,20 +32,20 @@ export function QuestImage({ taskId, mode, name }: { taskId: string; mode: Quest
       {entry && state !== "unavailable" && (
         <img
           src={`${entry.path}?v=${entry.sha256.slice(0, 16)}`}
-          alt={`Generic quest artwork for ${name}; not an objective-location photograph`}
+          alt={t("Generic quest artwork for {name}; not an objective-location photograph", { name: g(name) })}
           loading="lazy"
           decoding="async"
           onLoad={() => setState("ready")}
           onError={() => setState("unavailable")}
         />
       )}
-      {state === "loading" && <p role="status">Loading quest artwork…</p>}
+      {state === "loading" && <p role="status">{t("Loading quest artwork…")}</p>}
       {state === "unavailable" && (
-        <p role="status">Quest artwork unavailable. Use the objective text and location map.</p>
+        <p role="status">{t("Quest artwork unavailable. Use the objective text and location map.")}</p>
       )}
       {entry && (
         <figcaption title={entry.sourceUrl}>
-          Generic quest image · Source: Tarkov.dev (assets.tarkov.dev)
+          {t("Generic quest image · Source: Tarkov.dev (assets.tarkov.dev)")}
           <br />
           Escape from Tarkov © Battlestate Games
         </figcaption>

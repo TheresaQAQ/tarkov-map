@@ -1,3 +1,5 @@
+import { t, gm, poiName } from "../i18n";
+import { useLanguage } from "../use-language";
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import { getMapDefinition } from "../data/maps";
@@ -7,6 +9,7 @@ import type { QuestObjectivePoi } from "../types";
 import { assetForFloor, createMapCrs, mapBounds, worldPoint } from "./map-view-helpers";
 
 export function QuestLocationPreview({ poi }: { poi: QuestObjectivePoi }) {
+  useLanguage();
   const container = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const [retry, setRetry] = useState(0);
@@ -82,7 +85,7 @@ export function QuestLocationPreview({ poi }: { poi: QuestObjectivePoi }) {
     };
   }, [definition, floor, poi, retry]);
 
-  if (!definition || !floor) return <p>Location map unavailable. The objective text is still available.</p>;
+  if (!definition || !floor) return <p>{t("Location map unavailable. The objective text is still available.")}</p>;
   const floorName = [definition.baseFloor, ...definition.floors].find((candidate) => candidate.id === floor)?.name;
   return (
     <figure className="quest-location-preview">
@@ -90,18 +93,23 @@ export function QuestLocationPreview({ poi }: { poi: QuestObjectivePoi }) {
         ref={container}
         className="quest-preview-map"
         role="img"
-        aria-label={`${poi.name}: objective location on ${definition.displayName}, ${floorName}`}
+        aria-label={t("{name}: objective location on {map}, {floor}", {
+          name: poiName(poi),
+          map: gm(definition.displayName),
+          floor: t(floorName),
+        })}
       />
-      {state === "loading" && <p role="status">Loading location map…</p>}
+      {state === "loading" && <p role="status">{t("Loading location map…")}</p>}
       {state === "error" && (
         <p role="status">
-          Location map unavailable. <button onClick={() => setRetry((value) => value + 1)}>Retry preview</button>
+          {t("Location map unavailable.")}{" "}
+          <button onClick={() => setRetry((value) => value + 1)}>{t("Retry preview")}</button>
         </p>
       )}
       <figcaption>
-        Objective location map · {definition.displayName} · {floorName}
+        {t("Objective location map ·")} {gm(definition.displayName)} · {t(floorName)}
         <br />
-        Map by {definition.attribution.name} · CC BY-NC-SA 4.0
+        {t("Map by")} {definition.attribution.name} · CC BY-NC-SA 4.0
       </figcaption>
     </figure>
   );

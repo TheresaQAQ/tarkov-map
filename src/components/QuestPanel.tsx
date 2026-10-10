@@ -1,3 +1,5 @@
+import { chineseGameText, localizeGameText, localizeMessage, t, g, gm, localizeQuestSummary } from "../i18n";
+import { useLanguage } from "../use-language";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getMapDefinition } from "../data/maps";
 import {
@@ -48,17 +50,17 @@ const modeLabels: Record<QuestGameMode, string> = {
 };
 
 function mapLabel(mapId: string) {
-  return getMapDefinition(mapId)?.displayName ?? mapId.replaceAll("-", " ");
+  return gm(getMapDefinition(mapId)?.displayName ?? mapId.replaceAll("-", " "));
 }
 
 function profileLabel(profileKey: string) {
-  return `PROFILE ${profileKey.slice(0, 8).toUpperCase()}`;
+  return t("PROFILE {id}", { id: profileKey.slice(0, 8).toUpperCase() });
 }
 
 function displayStatusLabel(status: QuestDisplayStatus, isExplicit: boolean) {
-  if (isExplicit) return status.toUpperCase();
-  if (status === "unknown") return "ELIGIBILITY UNKNOWN";
-  return `POSSIBLY ${status.toUpperCase()}`;
+  if (isExplicit) return t(status.toUpperCase());
+  if (status === "unknown") return t("ELIGIBILITY UNKNOWN");
+  return t("POSSIBLY {status}", { status: t(status.toUpperCase()) });
 }
 
 export function QuestPanel({
@@ -71,6 +73,7 @@ export function QuestPanel({
   onImportComplete,
   onCatalogModeChange,
 }: QuestPanelProps) {
+  const language = useLanguage();
   const [mode, setMode] = useState<QuestGameMode>("regular");
   useEffect(() => {
     onCatalogModeChange?.(mode);
@@ -131,7 +134,7 @@ export function QuestPanel({
             );
           }
           if (result.importedEvents > 0) {
-            setSyncMessage(`${result.importedEvents} new log event${result.importedEvents === 1 ? "" : "s"} imported`);
+            setSyncMessage(`${result.importedEvents} new log events imported`);
             setRefreshKey((current) => current + 1);
           }
         })
@@ -192,13 +195,20 @@ export function QuestPanel({
         (quest) =>
           !needle ||
           quest.name.toLocaleLowerCase().includes(needle) ||
+          chineseGameText(quest.name, `${quest.id} name`).toLocaleLowerCase().includes(needle) ||
           quest.traderName.toLocaleLowerCase().includes(needle) ||
+          chineseGameText(quest.traderName, `${quest.traderId} Nickname`).toLocaleLowerCase().includes(needle) ||
           quest.summary.toLocaleLowerCase().includes(needle) ||
-          quest.objectives.some((objective) => objective.description.toLocaleLowerCase().includes(needle)),
+          localizeQuestSummary(quest).toLocaleLowerCase().includes(needle) ||
+          quest.objectives.some(
+            (objective) =>
+              objective.description.toLocaleLowerCase().includes(needle) ||
+              chineseGameText(objective.description, objective.id).toLocaleLowerCase().includes(needle),
+          ),
       )
       .sort((left, right) => compareQuests(left, right, progressIndex, playerLevel, mode))
       .slice(0, 200);
-  }, [bundle, mapId, mode, playerLevel, progressIndex, query, showAllMaps, statusFilter, traderFilter]);
+  }, [bundle, language, mapId, mode, playerLevel, progressIndex, query, showAllMaps, statusFilter, traderFilter]);
 
   const activeObjectivePois = useMemo<QuestObjectivePoi[]>(
     () => buildActiveQuestObjectivePois(bundle?.gameMode === mode ? bundle : null, mapId, progressIndex),
@@ -269,7 +279,7 @@ export function QuestPanel({
       setFollowDetected(true);
       if (result.enableQuestMarkers) onEnableQuestMarkersOnce?.();
       setSyncEnabled(true);
-      setSyncMessage(`${result.importedEvents} quest log event${result.importedEvents === 1 ? "" : "s"} imported`);
+      setSyncMessage(`${result.importedEvents} new log events imported`);
       setRefreshKey((current) => current + 1);
       setReviewOpen(false);
       onImportComplete?.();
@@ -351,46 +361,61 @@ export function QuestPanel({
         <Dialog className="quest-review-dialog" titleId="quest-review-title" onClose={() => void closeLogReview()}>
           <header>
             <div>
-              <span className="kicker">LOCAL QUEST LOG REVIEW</span>
-              <h2 id="quest-review-title">Import detected quest progress?</h2>
+              <span className="kicker">{t("LOCAL QUEST LOG REVIEW")}</span>
+              <h2 id="quest-review-title">{t("Import detected quest progress?")}</h2>
             </div>
-            <button className="bare-icon" onClick={() => void closeLogReview()} aria-label="Close quest log review">
+            <button
+              className="bare-icon"
+              onClick={() => void closeLogReview()}
+              aria-label={t("Close quest log review")}
+            >
               <UiIcon name="close" />
             </button>
           </header>
           <div className="quest-review-body">
             <div className="quest-experimental-notice">
-              <strong>EXPERIMENTAL LOG COMPATIBILITY</strong>
+              <strong>{t("EXPERIMENTAL LOG COMPATIBILITY")}</strong>
               <p>
-                Tarkov builds do not always retain a supported quest-event format. Raid Signal imports only explicit,
-                safely attributed records and never guesses from lifecycle traces or unrelated IDs.
+                {t(
+                  "Tarkov builds do not always retain a supported quest-event format. Raid Signal imports only explicit, safely attributed records and never guesses from lifecycle traces or unrelated IDs.",
+                )}
               </p>
             </div>
-            <p>{review.message}</p>
+            <p>{localizeMessage(review.message)}</p>
             <p>
-              Raid Signal reads supported quest notifications from your local Tarkov logs. Profile IDs are one-way
-              hashed before storage; log contents and quest progress never go to the relay or phone companion.
+              {t(
+                "Raid Signal reads supported quest notifications from your local Tarkov logs. Profile IDs are one-way hashed before storage; log contents and quest progress never go to the relay or phone companion.",
+              )}
             </p>
             <div className="quest-review-stats">
-              <span>{review.eventCount} EVENTS</span>
-              <span>{review.profiles.length} PROFILES</span>
-              <span>{review.sessionsScanned} SESSIONS</span>
-              <span>{review.filesScanned} FILES</span>
+              <span>
+                {review.eventCount} {t("EVENTS")}
+              </span>
+              <span>
+                {review.profiles.length} {t("PROFILES")}
+              </span>
+              <span>
+                {review.sessionsScanned} {t("SESSIONS")}
+              </span>
+              <span>
+                {review.filesScanned} {t("FILES")}
+              </span>
             </div>
             <p className="field-help">
-              {review.notificationFilesScanned} notification · {review.outputFilesScanned} output ·{" "}
-              {review.chatMessageMarkers} recognized format markers · {review.lifecycleHints} non-authoritative
-              lifecycle hints
+              {review.notificationFilesScanned} {t("notification ·")} {review.outputFilesScanned} {t("output ·")}{" "}
+              {review.chatMessageMarkers} {t("recognized format markers ·")} {review.lifecycleHints}{" "}
+              {t("non-authoritative lifecycle hints")}
             </p>
             {review.profiles.map((profile) => (
               <article key={`${profile.gameMode}:${profile.profileKey}`}>
                 <strong>{profileLabel(profile.profileKey)}</strong>
                 <span>
-                  {modeLabels[profile.gameMode]}
-                  {profile.isCurrent ? " · CURRENT" : " · OLDER"}
+                  {t(modeLabels[profile.gameMode])}
+                  {profile.isCurrent ? t(" · CURRENT") : t(" · OLDER")}
                 </span>
                 <small>
-                  {profile.startedCount} started · {profile.completedCount} completed · {profile.failedCount} failed
+                  {profile.startedCount} {t("started ·")} {profile.completedCount} {t("completed ·")}{" "}
+                  {profile.failedCount} {t("failed")}
                 </small>
               </article>
             ))}
@@ -398,49 +423,57 @@ export function QuestPanel({
               <div className="quest-review-warning">
                 {review.suspiciousSessions > 0 && (
                   <p>
-                    {review.suspiciousSessions} session(s) contained a suspicious start burst; those start events will
-                    be quarantined.
+                    {review.suspiciousSessions}{" "}
+                    {t("session(s) contained a suspicious start burst; those start events will be quarantined.")}
                   </p>
                 )}
                 {review.unattributedRecords > 0 && (
                   <p>
-                    {review.unattributedRecords} event(s) could not be safely tied to a profile and mode and will be
-                    skipped.
+                    {review.unattributedRecords}{" "}
+                    {t("event(s) could not be safely tied to a profile and mode and will be skipped.")}
                   </p>
                 )}
                 {review.malformedRecords > 0 && (
-                  <p>{review.malformedRecords} malformed or unsupported record(s) will be skipped.</p>
+                  <p>
+                    {review.malformedRecords} {t("malformed or unsupported record(s) will be skipped.")}
+                  </p>
                 )}
               </div>
             )}
             <p className="field-help">
-              Newest events win, including later manual corrections. Existing v1.2 manual progress is attached to each
-              detected current profile during this first import.
+              {t(
+                "Newest events win, including later manual corrections. Existing v1.2 manual progress is attached to each detected current profile during this first import.",
+              )}
             </p>
             {!review.available && (
               <div className="quest-review-warning">
-                <p>No supported quest events are available to import, so marker import is disabled.</p>
+                <p>{t("No supported quest events are available to import, so marker import is disabled.")}</p>
                 <p>
-                  Copy the privacy-safe summary and submit a compatibility report. It contains no paths, IDs,
-                  timestamps, or log contents.
+                  {t(
+                    "Copy the privacy-safe summary and submit a compatibility report. It contains no paths, IDs, timestamps, or log contents.",
+                  )}
                 </p>
                 <a href={questCompatibilityIssueUrl} target="_blank" rel="noreferrer">
-                  OPEN COMPATIBILITY REPORT ↗
+                  {t("OPEN COMPATIBILITY REPORT ↗")}
                 </a>
               </div>
             )}
-            {reviewError && <p className="error-box">{reviewError}</p>}
-            {diagnosticCopied && <p className="success-box">Privacy-safe diagnostics copied.</p>}
+            {reviewError && <p className="error-box">{localizeMessage(reviewError)}</p>}
+            {diagnosticCopied && <p className="success-box">{t("Privacy-safe diagnostics copied.")}</p>}
           </div>
           <footer>
             <button className="secondary" onClick={() => void copyDiagnostics()} disabled={syncBusy}>
-              COPY DIAGNOSTICS
+              {t("COPY DIAGNOSTICS")}
             </button>
             <button className="secondary" onClick={() => void closeLogReview()} disabled={syncBusy}>
-              NOT NOW
+              {t("NOT NOW")}
             </button>
             <button className="primary" onClick={() => void confirmImport()} disabled={syncBusy || !review.available}>
-              {syncBusy ? "IMPORTING…" : review.available ? "IMPORT AND ENABLE MARKERS" : "NO EVENTS TO IMPORT"}
+              {syncBusy
+                ? t("IMPORTING…")
+                : review.available
+                  ? t("IMPORT AND ENABLE MARKERS")
+                  : t("NO EVENTS TO IMPORT")}
             </button>
           </footer>
         </Dialog>
@@ -450,10 +483,10 @@ export function QuestPanel({
         <Dialog className="quest-dialog" titleId="quest-title" onClose={onClose}>
           <header>
             <div>
-              <span className="kicker">OFFLINE RAID PLANNING</span>
-              <h2 id="quest-title">Quest navigator</h2>
+              <span className="kicker">{t("OFFLINE RAID PLANNING")}</span>
+              <h2 id="quest-title">{t("Quest navigator")}</h2>
             </div>
-            <button className="bare-icon" onClick={onClose} aria-label="Close quests">
+            <button className="bare-icon" onClick={onClose} aria-label={t("Close quests")}>
               <UiIcon name="close" />
             </button>
           </header>
@@ -461,7 +494,7 @@ export function QuestPanel({
             <div className="segmented">
               {(Object.keys(modeLabels) as QuestGameMode[]).map((value) => (
                 <button className={mode === value ? "active" : ""} onClick={() => changeMode(value)} key={value}>
-                  {modeLabels[value]}
+                  {t(modeLabels[value])}
                 </button>
               ))}
             </div>
@@ -470,50 +503,51 @@ export function QuestPanel({
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search quests, traders, objectives"
+                placeholder={t("Search quests, traders, objectives")}
               />
             </label>
             <label className="compact-check">
               <input type="checkbox" checked={showAllMaps} onChange={(event) => setShowAllMaps(event.target.checked)} />{" "}
-              All maps
+              {t("All maps")}
             </label>
             <label className="quest-filter">
-              <span>STATUS</span>
+              <span>{t("STATUS")}</span>
               <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}>
-                <option value="all">ALL · ACTIONABLE FIRST</option>
-                <option value="actionable">ACTIONABLE ONLY</option>
-                <option value="unknown">ELIGIBILITY UNKNOWN</option>
+                <option value="all">{t("ALL · ACTIONABLE FIRST")}</option>
+                <option value="actionable">{t("ACTIONABLE ONLY")}</option>
+                <option value="unknown">{t("ELIGIBILITY UNKNOWN")}</option>
                 {questStatuses.map((status) => (
                   <option value={status} key={status}>
-                    {status.toUpperCase()}
+                    {t(status.toUpperCase())}
                   </option>
                 ))}
               </select>
             </label>
             <label className="quest-filter">
-              <span>TRADER</span>
+              <span>{t("TRADER")}</span>
               <select value={traderFilter} onChange={(event) => setTraderFilter(event.target.value)}>
-                <option value="all">ALL TRADERS</option>
+                <option value="all">{t("ALL TRADERS")}</option>
                 {traders.map((trader) => (
                   <option value={trader} key={trader}>
-                    {trader.toUpperCase()}
+                    {g(trader, `${bundle?.quests.find((quest) => quest.traderName === trader)?.traderId} Nickname`)}
                   </option>
                 ))}
               </select>
             </label>
           </div>
           <div className="quest-experimental-notice quest-experimental-notice--panel">
-            <strong>EXPERIMENTAL LOG IMPORT</strong>
+            <strong>{t("EXPERIMENTAL LOG IMPORT")}</strong>
             <p>
-              Current Tarkov builds may not retain recognized quest events. Manual quest tracking remains available;
-              automatic import never infers progress from ambiguous log lines.
+              {t(
+                "Current Tarkov builds may not retain recognized quest events. Manual quest tracking remains available; automatic import never infers progress from ambiguous log lines.",
+              )}
             </p>
           </div>
           <div className="quest-profile-bar">
             {isTauriRuntime() ? (
               <>
                 <label>
-                  <span>PROFILE</span>
+                  <span>{t("PROFILE")}</span>
                   <select
                     value={selectedProfile?.profileKey ?? ""}
                     onChange={(event) => {
@@ -522,19 +556,23 @@ export function QuestPanel({
                       setFollowDetected(false);
                     }}
                   >
-                    {!modeProfiles.length && <option value="">NO DETECTED PROFILE</option>}
+                    {!modeProfiles.length && <option value="">{t("NO DETECTED PROFILE")}</option>}
                     {modeProfiles.map((profile) => (
                       <option key={profile.profileKey} value={profile.profileKey}>
                         {profileLabel(profile.profileKey)}
-                        {profile.isCurrent ? " · CURRENT" : ""}
+                        {profile.isCurrent ? t(" · CURRENT") : ""}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label>
                   <span>
-                    PLAYER LEVEL{" "}
-                    <i title="Optional. Used only for possibly locked/available labels; quest events remain authoritative.">
+                    {t("PLAYER LEVEL")}{" "}
+                    <i
+                      title={t(
+                        "Optional. Used only for possibly locked/available labels; quest events remain authoritative.",
+                      )}
+                    >
                       ?
                     </i>
                   </span>
@@ -544,42 +582,44 @@ export function QuestPanel({
                     max="79"
                     value={levelDraft}
                     onChange={(event) => setLevelDraft(event.target.value)}
-                    placeholder="OPTIONAL"
+                    placeholder={t("OPTIONAL")}
                   />
                 </label>
                 <button onClick={() => void savePlayerLevel()} disabled={!selectedProfile}>
-                  SAVE LEVEL
+                  {t("SAVE LEVEL")}
                 </button>
                 <button onClick={followCurrentProfile} disabled={followDetected}>
-                  {followDetected ? "FOLLOWING CURRENT" : "FOLLOW CURRENT"}
+                  {followDetected ? t("FOLLOWING CURRENT") : t("FOLLOW CURRENT")}
                 </button>
                 {syncEnabled ? (
                   <button onClick={() => void pauseAutomaticSync()} disabled={syncBusy}>
-                    PAUSE LOG SYNC
+                    {t("PAUSE LOG SYNC")}
                   </button>
                 ) : (
                   <button onClick={() => void openLogReview()} disabled={syncBusy}>
-                    {syncBusy ? "SCANNING LOGS…" : "REVIEW LOG IMPORT"}
+                    {syncBusy ? t("SCANNING LOGS…") : t("REVIEW LOG IMPORT")}
                   </button>
                 )}
               </>
             ) : (
-              <span>Phone companion progress is manual and stays on this device.</span>
+              <span>{t("Phone companion progress is manual and stays on this device.")}</span>
             )}
           </div>
           <div className="quest-result-bar">
             <span>
-              {quests.length} QUESTS{syncMessage ? ` · ${syncMessage.toUpperCase()}` : ""}
+              {t("{count} QUESTS", { count: quests.length })}
+              {syncMessage ? ` · ${localizeMessage(syncMessage).toUpperCase()}` : ""}
             </span>
-            <b>{showAllMaps ? "ALL LOCATIONS" : mapLabel(mapId).toUpperCase()}</b>
+            <b>{showAllMaps ? t("ALL LOCATIONS") : mapLabel(mapId)}</b>
           </div>
           {mode === "pvp-season" && (
             <p className="quest-advisory">
-              Seasonal quest eligibility is not reliably present in logs. Unsaved quests stay “eligibility unknown”;
-              explicit started/completed/failed events remain authoritative.
+              {t(
+                "Seasonal quest eligibility is not reliably present in logs. Unsaved quests stay “eligibility unknown”; explicit started/completed/failed events remain authoritative.",
+              )}
             </p>
           )}
-          {error && <p className="error-box">{error}</p>}
+          {error && <p className="error-box">{localizeMessage(error)}</p>}
           <div className="quest-list">
             {quests.map((quest) => {
               const explicit = progressIndex.get(quest.id);
@@ -594,24 +634,26 @@ export function QuestPanel({
                       aria-expanded={isExpanded}
                     >
                       <span>
-                        {quest.traderName.toUpperCase()} ·{" "}
-                        {quest.minPlayerLevel > 0 ? `LEVEL ${quest.minPlayerLevel}` : "ANY LEVEL"} · CHAIN{" "}
-                        {quest.chainDepth + 1}
+                        {g(quest.traderName, `${quest.traderId} Nickname`)} ·{" "}
+                        {quest.minPlayerLevel > 0
+                          ? t("LEVEL {level}", { level: quest.minPlayerLevel })
+                          : t("ANY LEVEL")}{" "}
+                        {t("· CHAIN")} {quest.chainDepth + 1}
                       </span>
-                      <strong>{quest.name}</strong>
-                      <small>{quest.summary}</small>
+                      <strong>{g(quest.name, `${quest.id} name`) || t("Unknown quest")}</strong>
+                      <small>{localizeQuestSummary(quest)}</small>
                     </button>
                     <select
                       value={explicit?.status ?? ""}
-                      aria-label={`Status for ${quest.name}`}
+                      aria-label={t("Status for {name}", { name: g(quest.name, `${quest.id} name`) })}
                       onChange={(event) => void updateStatus(quest.id, event.target.value as QuestStatus)}
                     >
                       <option value="" disabled>
-                        AUTO · {displayStatusLabel(status, false)}
+                        {t("AUTO ·")} {displayStatusLabel(status, false)}
                       </option>
                       {questStatuses.map((value) => (
                         <option key={value} value={value}>
-                          {value.toUpperCase()}
+                          {t(value.toUpperCase())}
                         </option>
                       ))}
                     </select>
@@ -628,14 +670,16 @@ export function QuestPanel({
                         </button>
                       ))
                     ) : (
-                      <span>LOCATION NOT SPECIFIED</span>
+                      <span>{t("LOCATION NOT SPECIFIED")}</span>
                     )}
-                    {explicit?.source && <em>{explicit.source === "logs" ? "LOG" : "MANUAL"}</em>}
+                    {explicit?.source && <em>{explicit.source === "logs" ? t("LOG") : t("MANUAL")}</em>}
                     <i
                       title={
                         explicit
-                          ? "Explicit progress event"
-                          : "Derived from known prerequisites and optional player level; trader state and other eligibility conditions may be missing."
+                          ? t("Explicit progress event")
+                          : t(
+                              "Derived from known prerequisites and optional player level; trader state and other eligibility conditions may be missing.",
+                            )
                       }
                     >
                       {displayStatusLabel(status, Boolean(explicit))}
@@ -645,25 +689,29 @@ export function QuestPanel({
                     <div className="quest-details">
                       {quest.requirements.length > 0 && (
                         <section>
-                          <h4>PREREQUISITES</h4>
+                          <h4>{t("PREREQUISITES")}</h4>
                           <p>
                             {quest.requirements
-                              .map((requirement) => questIndex.get(requirement.taskId)?.name ?? "Unknown quest")
+                              .map(
+                                (requirement) =>
+                                  g(questIndex.get(requirement.taskId)?.name, `${requirement.taskId} name`) ||
+                                  t("Unknown quest"),
+                              )
                               .join(" · ")}
                           </p>
                         </section>
                       )}
                       <section>
-                        <h4>WHAT TO DO</h4>
+                        <h4>{t("WHAT TO DO")}</h4>
                         {quest.objectives.map((objective, objectiveIndex) => {
                           const navigableMaps = objective.mapIds.length ? objective.mapIds : quest.mapIds;
                           return (
                             <div className="quest-objective-row" key={objective.id}>
                               <div>
                                 <b>{String(objectiveIndex + 1).padStart(2, "0")}</b>
-                                <span>{objective.description}</span>
+                                <span>{localizeGameText(objective.description, objective.id)}</span>
                                 {objective.details.map((detail) => (
-                                  <small key={detail}>{detail}</small>
+                                  <small key={detail}>{localizeGameText(detail)}</small>
                                 ))}
                               </div>
                               <div className="quest-objective-actions">
@@ -705,8 +753,8 @@ export function QuestPanel({
                                       : null;
                                   return (
                                     <button key={objectiveMapId} onClick={() => onFocusObjective(objectiveMapId, poi)}>
-                                      {zone ? "SHOW POINT" : candidate ? "SHOW AREA" : "VIEW"} ·{" "}
-                                      {mapLabel(objectiveMapId).toUpperCase()}
+                                      {zone ? t("SHOW POINT") : candidate ? t("SHOW AREA") : t("VIEW")} ·{" "}
+                                      {mapLabel(objectiveMapId)}
                                     </button>
                                   );
                                 })}
@@ -717,10 +765,10 @@ export function QuestPanel({
                       </section>
                       {quest.rewardSummary.length > 0 && (
                         <section>
-                          <h4>REWARDS</h4>
+                          <h4>{t("REWARDS")}</h4>
                           <div className="quest-rewards">
                             {quest.rewardSummary.map((reward) => (
-                              <span key={reward}>{reward}</span>
+                              <span key={reward}>{localizeGameText(reward)}</span>
                             ))}
                           </div>
                         </section>
@@ -730,7 +778,7 @@ export function QuestPanel({
                 </article>
               );
             })}
-            {!quests.length && !error && <p className="drawer-message">No quests match the current filters.</p>}
+            {!quests.length && !error && <p className="drawer-message">{t("No quests match the current filters.")}</p>}
           </div>
         </Dialog>
       )}

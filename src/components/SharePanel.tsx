@@ -1,3 +1,5 @@
+import { localizeMessage, t } from "../i18n";
+import { useLanguage } from "../use-language";
 import { invoke } from "@tauri-apps/api/core";
 import { QRCodeSVG } from "qrcode.react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -36,6 +38,7 @@ type Connection = "off" | "encrypting" | "connecting" | "online" | "disconnected
 const CONNECTION_TIMEOUT_MS = 10_000;
 
 export function SharePanel({ open, fix, mapId, onClose, onSquadPosition, onSessionEnd }: SharePanelProps) {
+  useLanguage();
   const [mode, setMode] = useState<"internet" | "lan">("internet");
   const [invite, setInvite] = useState("");
   const [joinInvite, setJoinInvite] = useState("");
@@ -240,10 +243,10 @@ export function SharePanel({ open, fix, mapId, onClose, onSquadPosition, onSessi
     <Dialog className="share-dialog" titleId="share-title" onClose={onClose}>
       <header>
         <div>
-          <span className="kicker">PRIVATE SQUAD COORDINATION</span>
-          <h2 id="share-title">Phone & squad link</h2>
+          <span className="kicker">{t("PRIVATE SQUAD COORDINATION")}</span>
+          <h2 id="share-title">{t("Phone & squad link")}</h2>
         </div>
-        <button className="bare-icon" onClick={onClose} aria-label="Close sharing">
+        <button className="bare-icon" onClick={onClose} aria-label={t("Close sharing")}>
           <UiIcon name="close" />
         </button>
       </header>
@@ -257,7 +260,7 @@ export function SharePanel({ open, fix, mapId, onClose, onSquadPosition, onSessi
             }}
             disabled={active}
           >
-            INTERNET
+            {t("INTERNET")}
           </button>
           <button
             className={mode === "lan" ? "active" : ""}
@@ -267,38 +270,40 @@ export function SharePanel({ open, fix, mapId, onClose, onSquadPosition, onSessi
             }}
             disabled={active}
           >
-            SAME WI-FI / LAN
+            {t("SAME WI-FI / LAN")}
           </button>
         </div>
         <label className="text-field">
-          <span>CALLSIGN</span>
+          <span>{t("CALLSIGN")}</span>
           <input value={nickname} maxLength={24} onChange={(event) => setNickname(event.target.value)} />
         </label>
         {mode === "internet" ? (
           <>
-            <h3>INTERNET ROOM</h3>
+            <h3>{t("INTERNET ROOM")}</h3>
             <p>
-              Positions are encrypted before leaving this device. The relay sees connection metadata and room activity,
-              but cannot decrypt the map or coordinates.
+              {t(
+                "Positions are encrypted before leaving this device. The relay sees connection metadata and room activity, but cannot decrypt the map or coordinates.",
+              )}
             </p>
           </>
         ) : (
           <>
-            <h3>ENCRYPTED LAN SESSION</h3>
+            <h3>{t("ENCRYPTED LAN SESSION")}</h3>
             <p>
-              One desktop hosts the temporary session. Other desktops and phones must be on the same trusted network;
-              the link never reaches the Internet relay.
+              {t(
+                "One desktop hosts the temporary session. Other desktops and phones must be on the same trusted network; the link never reaches the Internet relay.",
+              )}
             </p>
           </>
         )}
         {!active && !invite && (
           <div className="share-actions">
             <button className="dialog-button" onClick={() => void (mode === "internet" ? hostInternet() : startLan())}>
-              {mode === "internet" ? "CREATE INTERNET ROOM" : "HOST LAN SESSION"}
+              {mode === "internet" ? t("CREATE INTERNET ROOM") : t("HOST LAN SESSION")}
             </button>
-            <span>OR JOIN AND PUBLISH YOUR POSITION</span>
+            <span>{t("OR JOIN AND PUBLISH YOUR POSITION")}</span>
             <label className="text-field">
-              <span>{joinLabel}</span>
+              <span>{t(joinLabel)}</span>
               <input
                 value={joinInvite}
                 onChange={(event) => setJoinInvite(event.target.value)}
@@ -310,7 +315,7 @@ export function SharePanel({ open, fix, mapId, onClose, onSquadPosition, onSessi
               disabled={!joinInvite.trim()}
               onClick={() => void joinRoom(mode)}
             >
-              JOIN AND PUBLISH
+              {t("JOIN AND PUBLISH")}
             </button>
           </div>
         )}
@@ -322,40 +327,43 @@ export function SharePanel({ open, fix, mapId, onClose, onSquadPosition, onSessi
               </div>
             )}
             <div>
-              <span className={`share-state ${connection}`}>{stateLabel}</span>
+              <span className={`share-state ${connection}`}>{t(stateLabel)}</span>
               <strong>
                 {mode === "internet"
-                  ? "Share privately with your squad"
-                  : "Scan on a phone or paste into another desktop"}
+                  ? t("Share privately with your squad")
+                  : t("Scan on a phone or paste into another desktop")}
               </strong>
               <p>
-                The invitation contains the encryption key. Anyone who has it can view the live positions, and a
-                modified client could publish forged positions.
+                {t(
+                  "The invitation contains the encryption key. Anyone who has it can view the live positions, and a modified client could publish forged positions.",
+                )}
               </p>
               {mode === "lan" && (
                 <p>
-                  LAN traffic is encrypted, but the page itself uses local HTTP. Use this only on a network you trust.
+                  {t(
+                    "LAN traffic is encrypted, but the page itself uses local HTTP. Use this only on a network you trust.",
+                  )}
                 </p>
               )}
               {invite && (
                 <button className="inline-action" onClick={() => void copyInvitation()}>
-                  COPY INVITATION
+                  {t("COPY INVITATION")}
                 </button>
               )}
               <button className="inline-action danger" onClick={() => void stop()}>
-                END SESSION
+                {t("END SESSION")}
               </button>
               <span className="sr-only" role="status" aria-live="polite">
-                {copyStatus}
+                {localizeMessage(copyStatus)}
               </span>
             </div>
           </div>
         )}
-        {error && <p className="error-box">{error}</p>}
+        {error && <p className="error-box">{localizeMessage(error)}</p>}
       </div>
       <footer className="share-privacy">
-        8 clients · {mode === "internet" ? "3 hours" : "until the host ends it"} · no message history · screenshots,
-        logs, account data, quests and pins are never relayed
+        {t("8 clients ·")} {mode === "internet" ? t("3 hours") : t("until the host ends it")}{" "}
+        {t("· no message history · screenshots, logs, account data, quests and pins are never relayed")}
       </footer>
     </Dialog>
   );

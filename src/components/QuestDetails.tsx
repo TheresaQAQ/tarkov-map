@@ -1,3 +1,5 @@
+import { localizeGameText, t, g, localizeQuestSummary } from "../i18n";
+import { useLanguage } from "../use-language";
 import { useEffect, useState } from "react";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { loadQuestCatalog, loadQuestLinks, resolveQuestObjective } from "../quest-catalog";
@@ -17,6 +19,7 @@ export function QuestDetails({
   mode: QuestGameMode;
   onClose: () => void;
 }) {
+  useLanguage();
   const [details, setDetails] = useState<ReturnType<typeof resolveQuestObjective>>(null);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const [wikiUrl, setWikiUrl] = useState<string | null>(null);
@@ -57,38 +60,43 @@ export function QuestDetails({
     <Dialog className="quest-marker-dialog" titleId="quest-marker-title" onClose={onClose}>
       <header>
         <div>
-          <span className="kicker">QUEST OBJECTIVE{details ? ` · ${details.quest.traderName}` : ""}</span>
-          <h2 id="quest-marker-title">{details?.quest.name ?? poi.name}</h2>
+          <span className="kicker">
+            {t("QUEST OBJECTIVE")}
+            {details ? ` · ${g(details.quest.traderName, `${details.quest.traderId} Nickname`)}` : ""}
+          </span>
+          <h2 id="quest-marker-title">{g(details?.quest.name ?? poi.name, `${poi.taskId} name`)}</h2>
         </div>
-        <button className="quest-details-close" aria-label="Close quest details" onClick={onClose}>
-          Close
+        <button className="quest-details-close" aria-label={t("Close quest details")} onClick={onClose}>
+          {t("Close")}
         </button>
       </header>
       <div className="quest-marker-body">
-        {state === "loading" && <p role="status">Loading bundled quest information…</p>}
+        {state === "loading" && <p role="status">{t("Loading bundled quest information…")}</p>}
         {state === "error" && (
           <p role="status">
-            Additional quest information is unavailable. The marker description remains below.{" "}
-            <button onClick={() => setRetry((value) => value + 1)}>Retry details</button>
+            {t("Additional quest information is unavailable. The marker description remains below.")}{" "}
+            <button onClick={() => setRetry((value) => value + 1)}>{t("Retry details")}</button>
           </p>
         )}
-        {details && <p className="quest-marker-summary">{details.quest.summary}</p>}
-        <section aria-label="Selected objective">
-          <h3>{details?.objective.optional ? "Optional objective" : "Objective"}</h3>
-          <p>{details?.objective.description ?? poi.description}</p>
+        {details && <p className="quest-marker-summary">{localizeQuestSummary(details.quest)}</p>}
+        <section aria-label={t("Selected objective")}>
+          <h3>{details?.objective.optional ? t("Optional objective") : t("Objective")}</h3>
+          <p>{localizeGameText(details?.objective.description ?? poi.description, poi.objectiveId)}</p>
           {details && details.objective.details.length > 0 && (
             <ul>
               {details.objective.details.map((detail, index) => (
-                <li key={index}>{detail}</li>
+                <li key={index}>{localizeGameText(detail)}</li>
               ))}
             </ul>
           )}
         </section>
         {poi.kind === "quest-possible-location" && (
           <p className="quest-location-caution">
-            Possible location {(poi.locationIndex ?? 0) + 1}
-            {poi.locationCount ? ` of ${poi.locationCount}` : ""}. A spawn here is not guaranteed; check the other
-            possible locations.
+            {t("Possible location {index} of {count}", {
+              index: (poi.locationIndex ?? 0) + 1,
+              count: poi.locationCount ?? 1,
+            })}
+            {t(". A spawn here is not guaranteed; check the other possible locations.")}
           </p>
         )}
         <div className="quest-marker-images">
@@ -97,7 +105,7 @@ export function QuestDetails({
             key={`${mode}:${poi.taskId}`}
             taskId={poi.taskId}
             mode={mode}
-            name={details?.quest.name ?? poi.name}
+            name={g(details?.quest.name ?? poi.name, `${poi.taskId} name`)}
           />
         </div>
         {wikiUrl ? (
@@ -114,20 +122,20 @@ export function QuestDetails({
               if (safeUrl) void openUrl(safeUrl).catch(() => setLinkError(true));
             }}
           >
-            Open Tarkov Wiki ↗
+            {t("Open Tarkov Wiki ↗")}
           </a>
         ) : (
-          <p className="quest-wiki-unavailable">No verified Wiki link available.</p>
+          <p className="quest-wiki-unavailable">{t("No verified Wiki link available.")}</p>
         )}
         {linkError && (
           <p role="status">
-            Could not open the Wiki.{" "}
+            {t("Could not open the Wiki.")}{" "}
             <button
               onClick={() => {
                 if (wikiUrl) void navigator.clipboard.writeText(wikiUrl).catch(() => undefined);
               }}
             >
-              Copy Wiki link
+              {t("Copy Wiki link")}
             </button>
           </p>
         )}

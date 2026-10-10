@@ -1,3 +1,5 @@
+import { localizeMessage, t, gm } from "../i18n";
+import { useLanguage } from "../use-language";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { maps, getMapDefinition } from "../data/maps";
 import { allLootGroupIds, defaultVisiblePoiCategories, loadPoiBundle, lootGroupForType } from "../poi";
@@ -19,6 +21,7 @@ import type {
   QuestObjectivePoi,
   SquadPosition,
 } from "../types";
+import { LanguageSelect } from "./LanguageSelect";
 import { IntelDrawer } from "./IntelDrawer";
 import { MapView } from "./MapView";
 import { QuestPanel } from "./QuestPanel";
@@ -35,6 +38,7 @@ function CompanionGate({
   state: "encrypting" | "connecting" | "offline" | "invalid";
   error: string | null;
 }) {
+  useLanguage();
   const invalid = state === "invalid";
   const title = invalid
     ? "Invitation cannot be opened"
@@ -60,24 +64,26 @@ function CompanionGate({
             <circle cx="498" cy="330" r="7" />
           </g>
         </svg>
-        <span>ROOM / KEY LOCAL</span>
+        <span>{t("ROOM / KEY LOCAL")}</span>
         <b>RS</b>
       </div>
       <section>
+        <LanguageSelect />
         <p>
-          RAID SIGNAL / {invalid ? "INVITATION REJECTED" : state === "offline" ? "CONNECTION LOST" : "LOCAL DECRYPTION"}
+          {t("RAID SIGNAL /")}{" "}
+          {invalid ? t("INVITATION REJECTED") : state === "offline" ? t("CONNECTION LOST") : t("LOCAL DECRYPTION")}
         </p>
-        <h1>{title}</h1>
+        <h1>{t(title)}</h1>
         <span>
-          {error ??
+          {(error ? localizeMessage(error) : null) ??
             (state === "encrypting"
-              ? "The invitation key is being prepared locally on this device."
+              ? t("The invitation key is being prepared locally on this device.")
               : state === "connecting"
-                ? "The key remains on this device while the encrypted room connection is established."
-                : "The relay did not accept the connection. Check your network or request a fresh invitation.")}
+                ? t("The key remains on this device while the encrypted room connection is established.")
+                : t("The relay did not accept the connection. Check your network or request a fresh invitation."))}
         </span>
         {state === "offline" || state === "invalid" ? (
-          <a href="https://signal.mouchsiadis-solutions.com/">RETURN TO RAID SIGNAL</a>
+          <a href="https://signal.mouchsiadis-solutions.com/">{t("RETURN TO RAID SIGNAL")}</a>
         ) : null}
       </section>
     </main>
@@ -85,6 +91,7 @@ function CompanionGate({
 }
 
 export function CompanionApp() {
+  useLanguage();
   const [connection, setConnection] = useState<"encrypting" | "connecting" | "online" | "offline" | "invalid">(
     "encrypting",
   );
@@ -360,7 +367,7 @@ export function CompanionApp() {
   );
 
   if (connection === "invalid" || (connection !== "online" && !connectedOnce))
-    return <CompanionGate state={connection} error={error} />;
+    return <CompanionGate state={connection} error={localizeMessage(error)} />;
 
   return (
     <main className="companion-shell">
@@ -369,33 +376,34 @@ export function CompanionApp() {
           <b>RS</b>
           <span>
             <strong>RAID SIGNAL</strong>
-            <small>ENCRYPTED SQUAD COMPANION</small>
+            <small>{t("ENCRYPTED SQUAD COMPANION")}</small>
           </span>
         </div>
         <span className={`companion-state ${connection}`}>
           <i />
-          {connection.toUpperCase()}
+          {t(connection.toUpperCase())}
         </span>
-        <button onClick={() => setQuestsOpen(true)}>QUESTS</button>
-        <button onClick={() => setIntelOpen(!intelOpen)}>INTEL</button>
+        <button onClick={() => setQuestsOpen(true)}>{t("QUESTS")}</button>
+        <button onClick={() => setIntelOpen(!intelOpen)}>{t("INTEL")}</button>
       </header>
       <section className="companion-controls">
+        <LanguageSelect />
         <label>
-          <span>MAP</span>
-          <select aria-label="Map" value={definition.id} onChange={(event) => selectMap(event.target.value)}>
+          <span>{t("MAP")}</span>
+          <select aria-label={t("Map")} value={definition.id} onChange={(event) => selectMap(event.target.value)}>
             {maps.map((map) => (
               <option value={map.id} key={map.id}>
-                {map.displayName}
+                {gm(map.displayName)}
               </option>
             ))}
           </select>
         </label>
         <label>
-          <span>LEVEL</span>
-          <select aria-label="Floor" value={activeFloor} onChange={(event) => setFloor(event.target.value)}>
+          <span>{t("LEVEL")}</span>
+          <select aria-label={t("Floor")} value={activeFloor} onChange={(event) => setFloor(event.target.value)}>
             {floors.map((item) => (
               <option value={item.id} key={item.id}>
-                {item.name}
+                {t(item.name)}
               </option>
             ))}
           </select>
@@ -408,11 +416,11 @@ export function CompanionApp() {
             if (newest) setMapId(newest.mapId);
           }}
         >
-          FOLLOW SQUAD
+          {t("FOLLOW SQUAD")}
         </button>
       </section>
       <section className="companion-map">
-        {error && connection !== "online" && <p className="companion-connection-error">{error}</p>}
+        {error && connection !== "online" && <p className="companion-connection-error">{localizeMessage(error)}</p>}
         <MapView
           key={definition.id}
           definition={definition}
@@ -434,9 +442,7 @@ export function CompanionApp() {
           onCreateWaypoint={createPin}
         />
         <div className="companion-roster">
-          <span>
-            {positions.length} SIGNAL{positions.length === 1 ? "" : "S"}
-          </span>
+          <span>{t("{count} SIGNALS", { count: positions.length })}</span>
           {positions.map((position) => (
             <button
               key={position.senderId}
@@ -447,7 +453,7 @@ export function CompanionApp() {
             >
               <b>{position.nickname}</b>
               <small>
-                {getMapDefinition(position.mapId)?.displayName ?? position.mapId} ·{" "}
+                {gm(getMapDefinition(position.mapId)?.displayName ?? position.mapId)} ·{" "}
                 {Math.floor((Date.now() - position.receivedAt) / 1000)}s
               </small>
             </button>
@@ -487,12 +493,12 @@ export function CompanionApp() {
       </section>
       <footer className="companion-waypoint-controls">
         <button onClick={() => removePins()} disabled={!mapPins.length}>
-          Clear waypoints on this map
+          {t("Clear waypoints on this map")}
         </button>
         <span>
-          {definition.displayName} · {mapPins.length} saved
+          {gm(definition.displayName)} · {t("{count} saved", { count: mapPins.length })}
         </span>
-        {pinMessage && <p role="status">{pinMessage}</p>}
+        {pinMessage && <p role="status">{localizeMessage(pinMessage)}</p>}
       </footer>
       <QuestPanel
         open={questsOpen}

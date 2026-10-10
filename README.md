@@ -1,5 +1,7 @@
 # Raid Signal
 
+[简体中文说明](README.zh-CN.md)
+
 Local-first Escape from Tarkov map intelligence and end-to-end encrypted squad
 position sharing for Windows.
 
