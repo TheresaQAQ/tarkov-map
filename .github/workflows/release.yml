@@ -41,6 +41,27 @@ jobs:
           $cargo = Select-String -Path src-tauri/Cargo.toml -Pattern '^version = "([^\"]+)"' | ForEach-Object { $_.Matches[0].Groups[1].Value }
           if ($tag -ne $package -or $tag -ne $cargo) { throw "Tag, package, and Cargo versions must match" }
       - run: npm run tauri:build
+      - name: Verify clean Windows installation and startup
+        shell: pwsh
+        run: |
+          $candidates = @(Get-ChildItem src-tauri/target/release/bundle/nsis -Filter '*setup.exe')
+          if ($candidates.Count -ne 1) { throw "Expected exactly one NSIS installer" }
+          $installDirectory = Join-Path $env:RUNNER_TEMP 'raid-signal-install'
+          $installer = Start-Process -FilePath $candidates[0].FullName -ArgumentList @('/S', "/D=$installDirectory") -WindowStyle Hidden -PassThru
+          if (-not $installer.WaitForExit(120000)) { $installer.Kill(); throw "Installer timed out" }
+          if ($installer.ExitCode -ne 0) { throw "Installer exited with code $($installer.ExitCode)" }
+          $binary = Join-Path $installDirectory 'raid-signal.exe'
+          if (-not (Test-Path -LiteralPath $binary)) { throw "Installed application is missing" }
+          $application = Start-Process -FilePath $binary -WindowStyle Hidden -PassThru
+          try {
+            if (-not $application.WaitForInputIdle(30000)) { throw "Application did not initialize its Windows message loop" }
+            Start-Sleep -Seconds 5
+            $application.Refresh()
+            if ($application.HasExited) { throw "Application exited during startup with code $($application.ExitCode)" }
+            Write-Output 'Installed application started successfully on the clean Windows runner'
+          } finally {
+            if (-not $application.HasExited) { Stop-Process -Id $application.Id -Force }
+          }
       - name: Stage and scan installer
         id: artifact
         shell: pwsh
